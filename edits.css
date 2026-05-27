@@ -1,0 +1,164 @@
+/* EDITS PAGE - VERTICAL STACK STYLES */
+
+/* Main Container */
+body.edits-page {
+    background-color: #050505;
+    overflow: hidden;
+    /* Prevent native scroll */
+    height: 100vh;
+    touch-action: none;
+    /* Block native gestures for custom drag */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stack-container {
+    position: relative;
+    width: 340px;
+    height: 500px;
+    perspective: 1000px;
+    /* Essential for 3D effect */
+    transform-style: preserve-3d;
+    z-index: 10;
+}
+
+/* Individual Card */
+.stack-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: #1a1a1a;
+    background-size: cover;
+    background-position: center;
+
+    /* Center Flex for Content (if any text is added) */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    /* Default State (Hidden) */
+    opacity: 0;
+    transform: translateY(100vh) scale(0.5);
+    pointer-events: none;
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Video inside Card */
+.stack-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    /* Let drag events pass through to card */
+}
+
+/* Glass Overlay on Card */
+.stack-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 40%);
+    border-radius: 20px;
+    pointer-events: none;
+}
+
+/* Card Border/Glow */
+.stack-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Navigation Dots (Right Side) */
+.nav-dots {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 100;
+}
+
+.nav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-dot.active {
+    background: #ff4d6d;
+    box-shadow: 0 0 10px #ff4d6d;
+    transform: scale(1.5);
+}
+
+/* Instructions */
+.stack-instruction {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    pointer-events: none;
+    animation: pulseText 2s infinite;
+}
+
+@keyframes pulseText {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+}
+
+/* Volume Toggle */
+.volume-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 200;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.volume-btn:hover {
+    background: rgba(236, 72, 153, 0.5);
+    /* Pink glow */
+    transform: scale(1.1);
+}

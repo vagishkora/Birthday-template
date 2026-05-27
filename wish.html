@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Wish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cursor.css">
+    <link rel="stylesheet" href="avatars.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #020617;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+
+        .candle-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .candle-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Candle Body */
+        .candle {
+            width: 50px;
+            height: 150px;
+            background: linear-gradient(#fcd34d, #d97706);
+            /* Gold wax */
+            border-radius: 4px;
+            box-shadow: inset -10px 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        /* Wick */
+        .wick {
+            width: 4px;
+            height: 15px;
+            background: #4b5563;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Flame (Hidden Initially) */
+        .flame {
+            width: 20px;
+            height: 35px;
+            background: radial-gradient(ellipse at bottom, #fde047, #f97316);
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            box-shadow: 0 0 10px #f97316, 0 0 40px #facc15, 0 0 80px #facc15;
+            opacity: 0;
+            transition: all 0.5s ease-out;
+            transform-origin: bottom center;
+            z-index: 10;
+        }
+
+        /* Lit State */
+        .candle-container.lit .flame {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+            animation: flicker 1s infinite alternate;
+        }
+
+        .candle-container.lit .candle {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        /* Glow Aura */
+        .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(253, 224, 71, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            transition: transform 1s ease-out;
+            pointer-events: none;
+        }
+
+        .candle-container.lit .glow {
+            transform: translate(-50%, -50%) scale(1.5);
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1) skewX(-2deg);
+                opacity: 0.9;
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.05) skewX(2deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(-50%) scale(0.95) skewX(-1deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* Text */
+        .wish-text {
+            margin-top: 50px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .wish-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 100px;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            animation: pulse-text 2s infinite;
+        }
+
+        .instruction.hidden {
+            opacity: 0;
+            animation: none;
+        }
+
+        @keyframes pulse-text {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="heartbeat-bg"></div>
+    <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+
+    <div class="candle-container" id="candle" onclick="lightCandle()">
+        <div class="glow"></div>
+        <div class="wick"></div>
+        <div class="flame"></div>
+        <div class="candle"></div>
+    </div>
+
+    <div class="instruction" id="instruct">Tap the candle to light it ✨</div>
+
+    <div class="wish-text" id="wish">
+        <h2 style="font-family: 'Great Vibes', cursive; font-size: 3rem; color: #fcd34d;">Make a Wish...</h2>
+        <p style="max-width: 400px; line-height: 1.6;">
+            "May your life shine as bright as this flame,<br>
+            warm with love, and calm with peace."<br>
+            <br>
+            Close your eyes, think of a dream,<br>and know that I’m here to help make it true. ❤️
+        </p>
+    </div>
+
+    <script>
+        function lightCandle() {
+            const candle = document.getElementById('candle');
+            const wish = document.getElementById('wish');
+            const instruct = document.getElementById('instruct');
+
+            if (!candle.classList.contains('lit')) {
+                candle.classList.add('lit');
+                instruct.classList.add('hidden');
+
+                // Play soft ignite sound if possible (optional)
+
+                setTimeout(() => {
+                    wish.classList.add('visible');
+                }, 800);
+            }
+        }
+    </script>
+    <script src="cursor.js"></script>
+    <script src="avatars.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Timeline - Happy Birthday</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="music-toggle.css"> <!-- Global Music Toggle -->
+
+    <!-- Security -->
+    <!-- Security -->
+    <script src="auth.js"></script>
+    <style>
+        /* RESET & CORE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f172a;
+            /* Deep Midnight */
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* HEARTBEAT BACKGROUND (Consistent with Home/Reasons) */
+        .heartbeat-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1025 100%);
+            z-index: -2;
+        }
+
+        .heartbeat-bg::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+            animation: pulse-glow 6s infinite ease-in-out;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        /* NAVIGATION & HEADER */
+        .page-header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            background: linear-gradient(to right, #fff, #fbcfe8, #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+            margin-bottom: 10px;
+        }
+
+        /* VERTICAL TIMELINE */
+        .timeline-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px 100px;
+        }
+
+
+        /* The Line */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, #ec4899, #8b5cf6, transparent);
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50px;
+            position: relative;
+            margin-bottom: 80px;
+            width: 50%;
+            opacity: 0;
+            /* JS Animation trigger */
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .timeline-item:nth-child(even) {
+            align-self: flex-end;
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50px;
+            margin-left: 50%;
+        }
+
+        /* The Dot */
+        .timeline-dot {
+            position: absolute;
+            top: 30px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ec4899, 0 0 40px #ec4899;
+            z-index: 5;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot {
+            right: auto;
+            left: -8px;
+        }
+
+        /* GLASS CARD */
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(236, 72, 153, 0.15);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+
+        /* Card Decoration */
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ec4899, #8b5cf6);
+        }
+
+        .date-badge {
+            display: inline-block;
+            background: rgba(236, 72, 153, 0.2);
+            color: #fbcfe8;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .timeline-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-family: 'Great Vibes', cursive;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .timeline-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.4s ease;
+        }
+
+        .timeline-content:hover .timeline-img {
+            transform: scale(1.02);
+        }
+
+        .timeline-desc {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+
+        /* NEXT BUTTON */
+        .next-wrap {
+            text-align: center;
+            padding-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 1s ease 1s forwards;
+        }
+
+        .next-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.6);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .timeline-container::before {
+                left: 30px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                width: 100%;
+                margin-left: 0;
+                padding-left: 60px;
+                padding-right: 20px;
+                justify-content: flex-start;
+                align-self: flex-start;
+            }
+
+            .timeline-dot {
+                right: auto;
+                left: 22px;
+            }
+
+            .timeline-item:nth-child(even) .timeline-dot {
+                left: 22px;
+            }
+
+            .page-title {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Heartbeat Atmospheric BG -->
+    <div class="heartbeat-bg"></div>
+
+    <!-- Nav -->
+    <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">The Thread of Destiny</h1>
+        <p class="instruction">Scroll to follow our journey... 🧶</p>
+    </div>
+
+    <!-- RED STRING CONTAINER -->
+    <div class="thread-container">
+        <!-- SVG Path Layer -->
+        <svg class="thread-svg" preserveAspectRatio="none">
+            <path id="red-thread" d="" fill="none" stroke="#ef4444" stroke-width="4" stroke-linecap="round"
+                filter="drop-shadow(0 0 10px rgba(239, 68, 68, 0.6))" />
+        </svg>
+
+        <!-- ITEMS -->
+        <div class="timeline-items">
+            <!-- Memory 1 -->
+            <div class="thread-item left">
+                <div class="knot"></div>
+                <div class="polaroid">
+                    <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory">
+                    <div class="caption">
+                        <span class="date">Year 1</span>
+                        <h3>First Meeting </h3>
+                        <p>Our first memory together. Everything felt perfect and the beginning of a beautiful journey. ❤️</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory 2 -->
+            <div class="thread-item right">
+                <div class="knot"></div>
+                <div class="polaroid">
+                    <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Road Trip">
+                    <div class="caption">
+                        <span class="date">Year 2</span>
+                        <h3>Road Trip</h3>
+                        <p>A wonderful road trip. Exploring new places with you was an unforgettable experience.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory 3 -->
+            <div class="thread-item left">
+                <div class="knot"></div>
+                <div class="polaroid">
+                    <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Romantic Moment">
+                    <div class="caption">
+                        <span class="date">Year 3</span>
+                        <h3>Romantic Moment</h3>
+                        <p>A special moment shared. The joy and happiness we experienced is something I will cherish always. 🌍</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory 4 -->
+            <div class="thread-item right">
+                <div class="knot">
+                    <div class="string-end"></div>
+                </div>
+                <div class="polaroid">
+                    <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Special Date">
+                    <div class="caption">
+                        <span class="date">Year 4</span>
+                        <h3>Special Date</h3>
+                        <p>Peaceful and memorable. Looking forward to growing together and sharing many more milestones.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory 5 -->
+            <div class="thread-item left">
+                <div class="knot">
+                    <div class="string-end"></div>
+                </div>
+                <div class="polaroid">
+                    <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Adventurous Memory">
+                    <div class="caption">
+                        <span class="date">Year 5</span>
+                        <h3>Adventurous Memory</h3>
+                        <p>An adventurous outing filled with fun and smiles. Simple moments and quiet laughs that created lasting memories. 🌄</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- END KNOT -->
+            <div class="thread-item center" style="margin-top: 100px;">
+                <div class="knot big-knot"></div>
+                <a href="reasons.html" class="next-btn">
+                    View Reasons <i class="fas fa-heart" style="margin-left: 8px;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* THREAD CSS */
+        .thread-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-bottom: 200px;
+        }
+
+        .thread-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            /* Texture: slightly blur the line to look fibrous */
+            filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.4));
+        }
+
+        #red-thread {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .timeline-items {
+            position: relative;
+            z-index: 1;
+            padding-top: 50px;
+        }
+
+        .thread-item {
+            position: relative;
+            width: 45%;
+            margin-bottom: 150px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .thread-item.left {
+            left: 0;
+            text-align: right;
+        }
+
+        .thread-item.left .polaroid {
+            margin-left: auto;
+            /* push to right side of left container */
+        }
+
+        .thread-item.right {
+            left: 55%;
+            text-align: left;
+        }
+
+        .thread-item.center {
+            width: 100%;
+            left: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* REALISTIC KNOT MARKER (Red String Bow) */
+        .knot {
+            position: absolute;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* The Bow Wings */
+        .knot::before,
+        .knot::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            width: 14px;
+            height: 8px;
+            border: 2px solid #ef4444;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .knot::before {
+            left: -10px;
+            transform: rotate(-30deg);
+        }
+
+        .knot::after {
+            right: -10px;
+            transform: rotate(30deg);
+        }
+
+        /* Hanging Thread End */
+        .knot .string-end {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            background: #ef4444;
+            transform: translateX(-50%) rotate(10deg);
+        }
+
+        .knot.big-knot {
+            width: 20px;
+            height: 20px;
+            top: auto;
+            margin-bottom: 30px;
+            background: #ef4444;
+            animation: pulse-knot 2s infinite ease-in-out;
+        }
+
+        .knot.big-knot::before,
+        .knot.big-knot::after {
+            width: 20px;
+            height: 12px;
+            border-width: 3px;
+        }
+
+        .knot.big-knot::before {
+            left: -14px;
+        }
+
+        .knot.big-knot::after {
+            right: -14px;
+        }
+
+        @keyframes pulse-knot {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                filter: brightness(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        /* Adjust Knot Position relative to item */
+        .thread-item.left .knot {
+            right: -8%;
+            /* Tweak for better alignment */
+        }
+
+        .thread-item.right .knot {
+            left: -8%;
+        }
+
+        /* Polaroid Logic (Reuse style but refined) */
+        .polaroid {
+            background: white;
+            padding: 15px 15px 50px 15px;
+            border-radius: 2px;
+            /* sharper corners for paper look */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            display: inline-block;
+            max-width: 400px;
+            transform: rotate(-2deg);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Bounce on hover */
+            position: relative;
+        }
+
+        /* The "Pin" or "Tape" illusion (optional, but requested 'knots') */
+        /* We use the connection line for this. */
+
+        .thread-item.right .polaroid {
+            transform: rotate(2deg);
+        }
+
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+            box-shadow: 0 25px 60px rgba(236, 72, 153, 0.4);
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+            filter: sepia(0.2) contrast(1.1);
+            /* Vintage feel */
+        }
+
+        .caption h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: #1f2937;
+            margin: 0;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        .caption p {
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        .caption .date {
+            color: #ef4444;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+
+        /* NEXT BUTTON - LIQUID GLASS STYLE */
+        .next-wrap {
+            text-align: center;
+            padding-bottom: 60px;
+            opacity: 0;
+            animation: fadeIn 1s ease 1s forwards;
+            position: relative;
+            z-index: 10;
+        }
+
+        .next-btn {
+            display: inline-block;
+            padding: 15px 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Active State */
+        .thread-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .thread-item {
+                width: 90% !important;
+                left: 5% !important;
+                margin-bottom: 80px;
+                text-align: center;
+            }
+
+            .thread-item .polaroid {
+                margin: 0 auto;
+            }
+
+            .knot {
+                display: none;
+                /* Hide knots on mobile, thread just goes behind */
+            }
+
+            .thread-svg {
+                opacity: 0.3;
+                /* Fade thread on mobile so it doesn't cross content awkwardly */
+            }
+        }
+    </style>
+
+    <!-- THREAD LOGIC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const path = document.getElementById('red-thread');
+            const items = document.querySelectorAll('.thread-item');
+
+            function updatePath() {
+                const container = document.querySelector('.thread-container');
+                const containerRect = container.getBoundingClientRect();
+                const centerX = containerRect.width / 2;
+
+                // Start point (Top Center)
+                let d = `M ${centerX} 0`;
+                let prevX = centerX;
+                let prevY = 0;
+
+                items.forEach((item, index) => {
+                    const knot = item.querySelector('.knot');
+                    if (!knot) return;
+
+                    // Get knot position relative to container
+                    const knotRect = knot.getBoundingClientRect();
+                    // Calculate relative X/Y inside position: relative container
+                    const currentX = (knotRect.left + knotRect.width / 2) - containerRect.left;
+                    const currentY = (knotRect.top + knotRect.height / 2) - containerRect.top;
+
+                    // Bezier Control Points for "Hanging" effect
+                    // We want the thread to droop slightly between points or curve naturally
+                    const distY = currentY - prevY;
+
+                    // Control Point 1: Down from previous
+                    const cp1x = prevX;
+                    const cp1y = prevY + (distY * 0.5);
+
+                    // Control Point 2: Up from current
+                    const cp2x = currentX;
+                    const cp2y = currentY - (distY * 0.5);
+
+                    // If it's the first one, maybe just a simple curve
+                    // For a "Tension" look, we can adjust the cp1x/cp2x to be closer to the center axis 
+                    // if we want it to look like it's pulled tight, or further if loose.
+
+                    // Let's add a bit of "Physics" - randomness or "slack"
+                    // Simulate wind/organic movement by slightly offsetting control points
+
+                    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${currentX} ${currentY}`;
+
+                    prevX = currentX;
+                    prevY = currentY;
+                });
+
+                // STOP THE THREAD HERE - No trailing curve
+                // The loop above ends exactly at the last item (which is the center knot button)
+
+                path.setAttribute('d', d);
+
+                // Prep Scroll Draw
+                const pathLength = path.getTotalLength();
+                path.style.strokeDasharray = pathLength;
+                path.style.strokeDashoffset = pathLength;
+
+                // Store length for scroll handler
+                window.pathLength = pathLength;
+            }
+
+            // Scroll Handler (Optimized)
+            window.addEventListener('scroll', () => {
+                if (!window.pathLength) return;
+
+                // Calculate how far down the timeline we are
+                const container = document.querySelector('.thread-container');
+                const start = container.offsetTop - window.innerHeight * 0.5;
+                const end = container.offsetTop + container.offsetHeight - window.innerHeight * 0.5;
+                const scrollTop = window.scrollY;
+
+                let pct = (scrollTop - start) / (end - start);
+                pct = Math.max(0, Math.min(1, pct));
+
+                // Draw slightly ahead of scroll for UX
+                const drawLength = window.pathLength * (pct * 1.2);
+
+                path.style.strokeDashoffset = Math.max(0, window.pathLength - drawLength);
+            });
+
+            // Initial calc
+            setTimeout(updatePath, 200); // Wait for layout
+            window.addEventListener('resize', updatePath);
+
+            // Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            items.forEach(item => observer.observe(item));
+        });
+    </script>
+    <script src="music-toggle.js"></script>
+</body>

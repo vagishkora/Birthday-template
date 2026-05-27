@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- SECURITY CHECK -->
+    <script src="auth.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Her Multiverse - Happy Birthday</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌌</text></svg>">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&family=Bleury+Saint&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="music-toggle.css"> <!-- Global Music Toggle -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Page Specific Styles */
+        body {
+            background-color: #0f0508;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .multiverse-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            /* Switch to Flexbox for better centering of last item */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .page-title {
+            font-family: 'Bleury Saint', sans-serif;
+            color: #ff4d6d;
+            font-size: 3.5rem;
+            margin-top: 40px;
+            text-align: center;
+            text-shadow: 0 0 20px rgba(255, 77, 109, 0.3);
+        }
+
+
+
+        /* Card 3D Flip */
+        .mv-card {
+            background-color: transparent;
+            /* Flex sizing: grow, shrink, basis */
+            flex: 1 1 300px;
+            max-width: 350px;
+            /* Prevent them from getting too wide */
+            width: 100%;
+            height: 550px;
+            /* Increased height to fit bigger heart */
+            /* Increased height to fit bigger heart */
+            perspective: 1000px;
+            /* Remove if using simple fade, keeping for potential flip */
+            cursor: pointer;
+        }
+
+        .mv-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .mv-card:hover .mv-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .mv-card-front,
+        .mv-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Shared Basics */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mv-card-front {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            /* Front: Top aligned for photos */
+            justify-content: flex-start;
+            padding: 40px 20px;
+        }
+
+        .mv-card-back {
+            background-color: #1a1a1a;
+            transform: rotateY(180deg);
+            /* Back: Center aligned for text */
+            justify-content: center;
+            padding: 30px;
+        }
+
+        /* Heart Shape Container */
+        /* Photo Container (Rectangle) */
+        .heart-frame {
+            width: 240px;
+            height: 320px;
+            /* Portrait rectangle */
+            margin-bottom: 20px;
+            position: relative;
+            border-radius: 15px;
+            /* Rounded corners */
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Explicitly remove mask */
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+
+            /* Prevent shrinking */
+            flex-shrink: 0;
+        }
+
+        .heart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            /* Focus on faces/top of image */
+            /* Placeholder color if no image */
+            background: #333;
+        }
+
+        .version-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .version-title {
+            font-family: 'Bleury Saint', sans-serif;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .version-vibe {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            margin-bottom: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .version-line {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: white;
+            font-style: italic;
+        }
+
+        /* Color Variations */
+        .theme-lavender .mv-card-back {
+            background: linear-gradient(135deg, #4a1c40, #967bb6);
+        }
+
+        .theme-yellow .mv-card-back {
+            background: linear-gradient(135deg, #5c4a08, #f4d03f);
+            color: #000;
+        }
+
+        .theme-yellow .version-line {
+            color: #222;
+        }
+
+        .theme-maroon .mv-card-back {
+            background: linear-gradient(135deg, #2c0b0e, #800000);
+        }
+
+        .theme-green .mv-card-back {
+            background: linear-gradient(135deg, #1e3323, #8fbc8f);
+        }
+
+        .theme-pink .mv-card-back {
+            background: linear-gradient(135deg, #4a1c25, #ffb7b2);
+            color: #333;
+        }
+
+        .theme-pink .version-line {
+            color: #444;
+        }
+
+        .theme-blue .mv-card-back {
+            background: linear-gradient(135deg, #0a1128, #191970);
+        }
+
+        .theme-grey .mv-card-back {
+            background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+            color: #111;
+        }
+
+        .theme-grey .version-line {
+            color: #000;
+        }
+
+        .theme-teal .mv-card-back {
+            background: linear-gradient(135deg, #0e2f44, #5f9ea0);
+        }
+
+        .theme-champagne .mv-card-back {
+            background: linear-gradient(135deg, #6d4c41, #f1e7d0);
+            color: #222;
+        }
+
+        .theme-champagne .version-line {
+            color: #3e2723;
+        }
+
+        .theme-ivory .mv-card-back {
+            background: linear-gradient(135deg, #5d4037, #fffdd0);
+            color: #3e2723;
+        }
+
+        .theme-ivory .version-line {
+            color: #3e2723;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="home.html" class="home-btn"><i class="fas fa-home"></i></a>
+
+    <h1 class="page-title">Her Multiverse</h1>
+
+    <div class="multiverse-container">
+
+        <!-- 1. Dreamer -->
+        <div class="mv-card theme-lavender">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics/image (56).JPEG" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">🌙</div>
+                    <h2 class="version-title">The Dreamer</h2>
+                    <p class="version-vibe">Hopeful</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Always thinking one step ahead, with stars in your eyes.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Goofball -->
+        <div class="mv-card theme-yellow">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics/image (54).JPEG" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">😂</div>
+                    <h2 class="version-title">The Goofball</h2>
+                    <p class="version-vibe">Playful</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Laughs first, thinks later — and somehow makes everything lighter.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Strong One -->
+        <div class="mv-card theme-maroon">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\strong.jpg" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">💪</div>
+                    <h2 class="version-title">The Strong One</h2>
+                    <p class="version-vibe">Resilient</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Carries more than you show, and still stands tall.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Calm One -->
+        <div class="mv-card theme-green">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\34857a63-35fd-4617-a24f-e782e65968a1.jpg" class="heart-img"
+                            alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">🌿</div>
+                    <h2 class="version-title">The Calm One</h2>
+                    <p class="version-vibe">Peaceful</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“The kind of presence that makes chaos slow down.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Soft Heart -->
+        <div class="mv-card theme-pink">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\Screenshot 2025-12-30 012505.png" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">💗</div>
+                    <h2 class="version-title">The Soft Heart</h2>
+                    <p class="version-vibe">Gentle</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Feels deeply, cares quietly.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Ambitious One -->
+        <div class="mv-card theme-blue">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\ambitious.jpg" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">🚀</div>
+                    <h2 class="version-title">The Ambitious One</h2>
+                    <p class="version-vibe">Focused</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Dreams big, works silently, lets results speak.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Comfort Zone -->
+        <div class="mv-card theme-grey">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\Screenshot 2025-12-30 011853.png" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">☁️</div>
+                    <h2 class="version-title">The Comfort Zone</h2>
+                    <p class="version-vibe">Warm</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Some people don’t solve problems — they just make you feel okay.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Curious Mind -->
+        <div class="mv-card theme-teal">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\curiousmind.jpg" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">🧠</div>
+                    <h2 class="version-title">The Curious Mind</h2>
+                    <p class="version-vibe">Thoughtful</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Always asking ‘why’, always learning something new.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. Quiet Magic -->
+        <div class="mv-card theme-champagne">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\ed660a68-f5b0-4489-90ba-140fdce90f21.jpg" class="heart-img"
+                            alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">✨</div>
+                    <h2 class="version-title">The Quiet Magic</h2>
+                    <p class="version-vibe">Enchanting</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“Doesn’t try to stand out — somehow always does.”</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10. Real One -->
+        <div class="mv-card theme-ivory">
+            <div class="mv-card-inner">
+                <div class="mv-card-front">
+                    <div class="heart-frame">
+                        <img src="pics\realone.jpg" class="heart-img" alt="Photo placeholder">
+                    </div>
+                    <div class="version-icon">🤍</div>
+                    <h2 class="version-title">The Real One</h2>
+                    <p class="version-vibe">Authentic</p>
+                </div>
+                <div class="mv-card-back">
+                    <p class="version-line">“No pretence. Just honesty, growth, and heart.”</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Mouse Trail Script -->
+    <script>
+        // Simple sparkle trail
+        document.addEventListener('mousemove', function (e) {
+            let body = document.querySelector('body');
+            let heart = document.createElement('span');
+            heart.classList.add('trail');
+            let x = e.offsetX;
+            let y = e.offsetY;
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+
+            // Random size
+            let size = Math.random() * 20;
+            heart.style.width = 10 + size + 'px';
+            heart.style.height = 10 + size + 'px';
+
+            body.appendChild(heart);
+
+            setTimeout(function () {
+                heart.remove();
+            }, 1000);
+        });
+    </script>
+    <style>
+        .trail {
+            position: absolute;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") no-repeat center center;
+            background-size: contain;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: fadeTrail 1s linear forwards;
+            opacity: 0.5;
+            z-index: 9999;
+        }
+
+        @keyframes fadeTrail {
+            0% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -100px) scale(0);
+            }
+        }
+    </style>
+    <script src="music-toggle.js"></script> <!-- Global Music Logic -->
+</body>
+
+</html>

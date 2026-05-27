@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Card - Janes Birthday</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&family=Dancing+Script:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="music-toggle.css">
+    <link rel="stylesheet" href="cursor.css"> <!-- Custom Cursor -->
+
+    <!-- Security -->
+    <script src="auth.js"></script>
+
+    <style>
+        /* RESET & CORE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f172a;
+            /* Deep Midnight */
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* HEARTBEAT BACKGROUND (Internal definition for safety) */
+        .heartbeat-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1a1025 100%);
+            z-index: -2;
+        }
+
+        .heartbeat-bg::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+            animation: pulse-glow 6s infinite ease-in-out;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+        }
+
+        /* Liquid Glass Home Button */
+        .glass-home-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            /* High Visibility */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow:
+                0 8px 32px 0 rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 2000;
+            text-decoration: none;
+            overflow: hidden;
+        }
+
+        .glass-home-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+
+        .glass-home-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #fff;
+            transform: scale(1.1) rotate(-90deg);
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-home-btn:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .glass-home-btn i {
+            z-index: 2;
+            transition: transform 0.4s;
+        }
+
+        .glass-home-btn:hover i {
+            transform: rotate(90deg);
+        }
+
+        /* 3D CARD CONTAINER */
+        .scene {
+            perspective: 1500px;
+            width: 380px;
+            /* Slightly wider for better text flow */
+            height: 550px;
+            position: relative;
+            z-index: 20;
+            /* Ensure it's above background */
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(-180deg) scale(1.05);
+        }
+
+        /* CARD FACES */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 18px;
+            overflow: hidden;
+            /* box-shadow handled individually */
+        }
+
+        /* FRONT: Premium Envelope Look */
+        .card-front {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Envelope Pattern Overlay */
+        .card-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(135deg, transparent 48%, rgba(255, 255, 255, 0.05) 50%, transparent 52%);
+            pointer-events: none;
+        }
+
+        .stamp {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .front-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(236, 72, 153, 0.5);
+        }
+
+        .tap-hint {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
+
+        /* BACK: Inside the Card (Message) - GLASSMORPHISM UPGRADE */
+        .card-back {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            transform: rotateY(180deg);
+            color: #fff;
+            /* White text for glass on dark */
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+
+            /* Hide Scrollbar */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE 10+ */
+        }
+
+        .card-back::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
+        }
+
+        /* Subtle Noise Texture for "Paper" feel but on Glass */
+        .card-back::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            opacity: 1;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .message-header {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            color: #fbcfe8;
+            /* Soft Pink */
+            text-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .message-body {
+            font-family: 'Poppins', sans-serif;
+            /* Clean font for deep message */
+            font-weight: 300;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* Action Buttons Inside */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            /* Stacked looks better for "Purpose" buttons */
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 25px;
+            z-index: 2;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            background: rgba(236, 72, 153, 0.2);
+            border-color: rgba(236, 72, 153, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.2);
+        }
+
+        /* Spotify Player Container */
+        .spotify-section {
+            width: 100%;
+            z-index: 2;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .spotify-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            display: block;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .spotify-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
+            animation: pulse-border 3s infinite;
+        }
+
+        @keyframes pulse-border {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(236, 72, 153, 0.1);
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(236, 72, 153, 0.3);
+            }
+        }
+
+        .footer-note {
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .close-card-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-card-btn:hover {
+            color: #fff;
+        }
+
+        /* Floating Hearts on Click */
+        .click-heart {
+            position: absolute;
+            color: #ec4899;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: float-up-fade 2s ease-out forwards;
+            z-index: 100;
+        }
+
+        @keyframes float-up-fade {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Easter Egg Text - OVERLAY STYLE */
+        .easter-egg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            /* Center vertically and horizontally */
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.95);
+            /* Dark background to cover overlaps */
+            backdrop-filter: blur(10px);
+
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            /* Larger Text */
+            color: #ec4899;
+            /* Pink Text */
+            text-shadow: 0 0 30px rgba(236, 72, 153, 0.8);
+
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+            z-index: 2000;
+            /* Top Z-Index */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .easter-egg.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            width: 400px;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            color: #fbcfe8;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ec4899;
+        }
+
+        .modal-text {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        .close-modal-btn {
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            border: none;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.4);
+        }
+
+        /* Next Button (Fixed Bottom) */
+        .next-wrap {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            /* Hidden initially */
+            animation: fadeIn 1s ease 1s forwards;
+            pointer-events: none;
+            /* Let clicks pass through until active */
+        }
+
+        .next-wrap.visible {
+            pointer-events: auto;
+        }
+
+        .next-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .scene {
+                width: 90vw;
+                height: 65vh;
+            }
+
+            .front-text {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Heartbeat Atmospheric BG -->
+    <div class="heartbeat-bg"></div>
+
+    <!-- Nav -->
+    <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+
+    <!-- 3D Card Scene -->
+    <div class="scene">
+        <!-- ... (Card content remains) ... -->
+        <div class="card" id="myCard" onclick="flipCard()">
+            <!-- ... -->
+            <div class="card-face card-front special-hover">
+                <!-- ... -->
+                <div class="stamp">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h1 class="front-text">For You</h1>
+                <div class="tap-hint">Tap to Open</div>
+            </div>
+
+            <div class="card-face card-back" onclick="handleCardClick(event)">
+                <!-- ... content ... -->
+                <h2 class="message-header">To My Favorite Person</h2>
+                <!-- ... -->
+                <!-- (Keeping existing content) -->
+                <p class="message-body">
+                    "You don’t just add joy to my life…<br>
+                    you quietly become the reason it feels lighter." ❤️
+                </p>
+
+                <div class="actions">
+                    <button class="action-btn" onclick="openModal('msg')"><i class="fas fa-heart"></i> 💌 A Little
+                        Secret</button>
+                    <button class="action-btn" onclick="openModal('gift')"><i class="fas fa-gift"></i> 🎁 Something for
+                        You</button>
+                </div>
+
+                <div class="music-player-wrapper">
+                    <!-- ... player ... -->
+                    <audio id="audio-player" src="music\WhatsApp Audio 2025-12-30 at 10.20.16 PM.mp4"
+                        preload="metadata"></audio>
+                    <div class="apple-player">
+                        <div class="album-art">
+                            <img src="https://picsum.photos/seed/portfolio/800/600" alt="Us" id="album-cover"
+                                onerror="this.src='https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?q=80&w=3786&auto=format&fit=crop'">
+                            <div class="playing-overlay" id="playing-overlay">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+                        </div>
+                        <div class="track-info">
+                            <h4 class="track-title">Pehli Nazar Main (My Version) 🎤</h4>
+                            <p class="track-artist">For My Jane ❤️</p>
+                        </div>
+                        <div class="progress-container" onclick="seekAudio(event)">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                        <div class="time-info">
+                            <span id="current-time">0:00</span>
+                            <span id="duration">3:19</span>
+                        </div>
+                        <div class="player-controls">
+                            <button class="control-btn small"><i class="fas fa-backward"></i></button>
+                            <button class="control-btn play-btn" onclick="togglePlay()">
+                                <i class="fas fa-play" id="play-icon"></i>
+                            </button>
+                            <button class="control-btn small"><i class="fas fa-forward"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-love" style="margin-top: 20px; opacity: 0.6; font-size: 0.7rem;">
+                    Made with love ❤️
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        /* Apple Music Player Styles */
+        .music-player-wrapper {
+            width: 100%;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .apple-player {
+            background: rgba(255, 255, 255, 0.08);
+            /* Glassy Dark */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .album-art {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            margin-bottom: 15px;
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .apple-player.playing .album-art {
+            transform: scale(1.05);
+            /* Breathe effect when playing */
+            box-shadow: 0 12px 24px rgba(236, 72, 153, 0.4);
+        }
+
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .track-info {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .track-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .track-artist {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #ec4899;
+            /* Pink */
+            width: 0%;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        /* Knob */
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 50%;
+            transform: translateY(-50%) scale(0);
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .progress-container:hover .progress-bar::after {
+            transform: translateY(-50%) scale(1);
+        }
+
+        .time-info {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            color: #ec4899;
+        }
+
+        .play-btn {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn.small {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Visualizer Overlay */
+        .playing-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .apple-player.playing .playing-overlay {
+            opacity: 1;
+        }
+
+        .bar {
+            width: 4px;
+            height: 20px;
+            background: #fff;
+            animation: bounce-music 1s infinite ease-in-out;
+            border-radius: 2px;
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.2s;
+            height: 30px;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce-music {
+
+            0%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            50% {
+                transform: scaleY(1.5);
+            }
+        }
+    </style>
+
+    <script>
+        const audio = document.getElementById('audio-player');
+        const playIcon = document.getElementById('play-icon');
+        const playerContainer = document.querySelector('.apple-player');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                playerContainer.classList.add('playing');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                playerContainer.classList.remove('playing');
+            }
+        }
+
+        // Update Progress
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            // Update Time Text
+            const min = Math.floor(audio.currentTime / 60);
+            const sec = Math.floor(audio.currentTime % 60);
+            currentTimeEl.innerText = `${min}:${sec < 10 ? '0' + sec : sec}`;
+        });
+
+        // Set Duration
+        audio.addEventListener('loadedmetadata', () => {
+            const min = Math.floor(audio.duration / 60);
+            const sec = Math.floor(audio.duration % 60);
+            durationEl.innerText = `${min}:${sec < 10 ? '0' + sec : sec}`;
+        });
+
+        function seekAudio(e) {
+            const width = e.target.parentElement.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        }
+
+        // Allow clicking on rod directly too if clicked on container
+    </script>
+
+    <!-- Removed Footer Note & Close Button -->
+
+    <!-- Next Button Area (Appears after card open?)
+    <div class="next-wrap visible">
+        <a href="hunt.html" class="next-btn">Continue the Adventure <i class="fas fa-arrow-right"></i></a>
+    </div> -->
+
+    <!-- MODAL: Secret Message -->
+    <div id="modal-msg" class="modal-overlay" onclick="closeModal('msg')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-icon"><i class="fas fa-quote-left"></i></div>
+            <h3 style="color:#fbcfe8; margin-bottom:10px;">Secret Message</h3>
+            <p class="modal-text">
+                "You are my today and all of my tomorrows." ❤️
+            </p>
+            <button class="close-modal-btn" onclick="closeModal('msg')">Close</button>
+        </div>
+    </div>
+
+    <!-- MODAL: Virtual Gift -->
+    <div id="modal-gift" class="modal-overlay" onclick="closeModal('gift')">
+        <div class="modal-card" onclick="event.stopPropagation()">
+            <div class="modal-icon"><i class="fas fa-gift"></i></div>
+            <h3 style="color:#fbcfe8; margin-bottom:10px;">A Promise</h3>
+            <p class="modal-text">
+                This coupon is valid for one<br>
+                <strong>Unplanned Road Trip</strong> <br>
+                to wherever you want! 🚗💨
+            </p>
+            <button class="close-modal-btn" onclick="closeModal('gift')">Redeem</button>
+        </div>
+    </div>
+
+    <!-- Easter Egg Text -->
+    <div id="easter-text" class="easter-egg">
+        You weren’t just a part of this birthday…<br>
+        you were the reason behind it. ✨
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let lastClickTime = 0;
+
+        function flipCard() {
+            const card = document.getElementById('myCard');
+            const isOpening = !card.classList.contains('is-flipped');
+
+            card.classList.toggle('is-flipped');
+
+            if (isOpening) {
+                // Dim background effect
+                document.querySelector('.heartbeat-bg').style.opacity = '0.6';
+                createHearts();
+            } else {
+                document.querySelector('.heartbeat-bg').style.opacity = '1';
+            }
+
+            // Easter Egg Logic
+            const now = Date.now();
+            if (now - lastClickTime < 1000) {
+                clickCount++;
+            } else {
+                clickCount = 1;
+            }
+            lastClickTime = now;
+
+            if (clickCount >= 3) {
+                triggerEasterEgg();
+                clickCount = 0;
+            }
+        }
+
+        function handleCardClick(event) {
+            event.stopPropagation();
+            // Optional: Internal clicks can also sparkle
+            createHearts(event.clientX, event.clientY);
+        }
+
+        function createHearts(x, y) {
+            const container = document.body;
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.className = 'click-heart';
+
+                // Position: either mouse click or center screen
+                const startX = x || window.innerWidth / 2;
+                const startY = y || window.innerHeight / 2;
+
+                // Random scatter
+                const randomX = (Math.random() - 0.5) * 100;
+
+                heart.style.left = `${startX + randomX}px`;
+                heart.style.top = `${startY}px`;
+                heart.style.animationDelay = `${Math.random() * 0.5}s`;
+
+                container.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 2000);
+            }
+        }
+
+        function triggerEasterEgg() {
+            const egg = document.getElementById('easter-text');
+            egg.classList.add('visible');
+            setTimeout(() => {
+                egg.classList.remove('visible');
+            }, 5000);
+        }
+
+
+        function openModal(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById('modal-' + id).classList.remove('active');
+        }
+    </script>
+    <script src="music-toggle.js"></script>
+    <script src="cursor.js"></script> <!-- Custom Cursor Logic -->
+</body>
+
+</html>

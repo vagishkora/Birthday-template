@@ -1,0 +1,2047 @@
+/* Font Import */
+@import url('https://fonts.cdnfonts.com/css/bleury-saint');
+
+:root {
+    --primary-color: #ff4d6d;
+    --secondary-color: #ff8fa3;
+    --accent-color: #fff0f3;
+    --text-color: #590d22;
+    --bg-gradient: linear-gradient(135deg, #141414 0%, #2b1d22 100%);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+    --font-heading: 'Bleury Saint', sans-serif;
+    --font-body: 'Poppins', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* Dynamic Viewport Height for Mobile Browsers */
+    font-family: var(--font-body);
+    color: white;
+    /* overflow-x: hidden; */
+    /* Let individual pages handle overflow */
+    position: relative;
+    background-color: #1a1a1a;
+    /* Neutral dark fallback */
+}
+
+@keyframes heartbeat {
+    0% {
+        background-size: 100% 100%;
+    }
+
+    50% {
+        background-size: 120% 120%;
+    }
+
+    100% {
+        background-size: 100% 100%;
+    }
+}
+
+/* Film Grain Texture Overlay - Simplified */
+/* Film Grain Texture Overlay - REMOVED to fix ghosting */
+body::before {
+    display: none;
+}
+
+/* Custom Heart Cursor */
+.cursor {
+    width: 30px;
+    height: 30px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") no-repeat center center;
+    background-size: contain;
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+}
+
+.cursor.clicked {
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Background Floating Hearts */
+.bg-hearts {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    bottom: -50px;
+    color: rgba(255, 77, 109, 0.4);
+    font-size: 20px;
+    animation: floatUp 15s linear infinite;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-120vh) scale(1.5) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Common Layout */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    /* Layout Logic Overhaul */
+    position: relative;
+    z-index: 10;
+    margin-top: 20px;
+    /* FIXED: Removed -100px to stop overlapping */
+    padding: 20px 5%;
+    background: transparent;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+/* ------------------------------------------- */
+/* HERO SECTION - REPAIRED (User Layout Logic) */
+/* ------------------------------------------- */
+.hero {
+    min-height: 80vh;
+    /* Allow expansion */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 5%;
+
+    /* Transparent to show Heartbeat BG */
+    background: transparent;
+    position: relative;
+}
+
+/* Button Container in Hero */
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    /* Space between buttons */
+    margin-top: 20px;
+    flex-wrap: wrap;
+    /* Prevent overlap on small screens */
+    width: 100%;
+    align-items: center;
+}
+
+/* Restored Premium Button Style */
+.btn-hero {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 35px;
+    border-radius: 50px;
+    /* Pill shape */
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
+    background: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+}
+
+.btn-hero:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 77, 109, 0.5);
+    background: #ff3355;
+}
+
+.hero h1 {
+    font-family: var(--font-heading);
+    /* Keeping consistency */
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    /* Slightly Reduced max size */
+    line-height: 1.2;
+    margin-bottom: 20px;
+    max-width: 800px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+    z-index: 2;
+    padding-top: 0;
+    color: white;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    max-width: 600px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.8);
+}
+
+.row-title {
+    margin: 40px 0 20px 0;
+    font-size: 1.5rem;
+    color: #e5e5e5;
+    clear: both;
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-align: center;
+    /* Centered as requested */
+}
+
+/* ------------------------------------------- */
+/* MOBILE OPTIMIZATION - FIXING OVERLAPS */
+/* ------------------------------------------- */
+@media screen and (max-width: 768px) {
+
+    /* 1. HERO SECTION */
+    .hero {
+        flex-direction: column !important;
+        /* Stack vertically */
+        padding: 50px 20px 40px 20px !important;
+        /* Adjust padding */
+        height: auto !important;
+        /* Allow content to push height */
+        text-align: center;
+        gap: 40px;
+    }
+
+    .hero-content-left {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+        /* Smaller heading */
+    }
+
+    .hero-content-right {
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        perspective: 1000px;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        margin-top: 0;
+        padding: 10px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    /* 2. 3D TICKET SCALING */
+    .ticket-container {
+        width: 100%;
+        max-width: 340px;
+        /* Card width */
+        height: auto;
+        /* Auto height */
+        transform: scale(0.9);
+    }
+
+    .ticket {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .ticket-left {
+        padding: 20px;
+        border-right: none;
+        border-bottom: 2px dashed #cbd5e1;
+    }
+
+    .ticket-right {
+        padding: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .barcode {
+        transform: rotate(0deg);
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .ticket-rip {
+        display: none;
+    }
+
+    /* 3. FIREWORKS BUTTON */
+    #surprise-link {
+        top: 15px !important;
+        font-size: 0.8rem !important;
+        padding: 8px 16px !important;
+        width: auto !important;
+        white-space: nowrap;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    /* 4. FAIRY LIGHTS */
+    .lightrope {
+        transform: scale(0.6);
+        transform-origin: top center;
+        width: 166%;
+        /* 100 / 0.6 */
+        left: -33%;
+        /* Center it back */
+        margin-top: -10px;
+    }
+
+    .lightrope li {
+        margin: 15px 15px;
+        /* Tighter spacing */
+    }
+
+    .lightrope li:after {
+        width: 40px;
+        /* Shorter wire */
+        height: 20px;
+        /* Shallower dip */
+        top: -15px;
+    }
+
+    /* 5. BIRTHDAY POSTER */
+    #birthday-poster h1 {
+        font-size: 3rem !important;
+        /* Fix huge text */
+    }
+
+    #birthday-poster span {
+        font-size: 3.5rem !important;
+    }
+
+    .poster-card {
+        padding: 1.5rem !important;
+        width: 90% !important;
+    }
+
+    .poster-card p {
+        font-size: 1rem !important;
+    }
+
+    .video-frame {
+        width: 100%;
+    }
+}
+
+.row {
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding: 20px;
+    gap: 15px;
+    scroll-behavior: smooth;
+}
+
+.row::-webkit-scrollbar {
+    display: none;
+}
+
+.row-poster {
+    width: 250px;
+    flex: 0 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+
+    /* Apple Glass Effect Base */
+    background: rgba(30, 30, 30, 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.row-poster:hover {
+    transform: scale(1.05) translateY(-10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 40px 0 rgba(255, 77, 109, 0.3);
+    z-index: 10;
+}
+
+/* Glass Content Inner Container */
+.glass-content {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Icon Glow Effect */
+.glass-content .emoji-icon {
+    font-size: 3rem;
+    /* Slightly smaller to balance with text */
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+    transition: 0.3s;
+    z-index: 2;
+}
+
+.row-poster:hover .emoji-icon {
+    transform: scale(1.1) translateY(-10px);
+    /* Subtle lift */
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
+}
+
+/* Tints / Gradients for backgrounds */
+.tint-pink {
+    background: radial-gradient(circle at top right, rgba(255, 154, 158, 0.4), transparent 70%);
+}
+
+.tint-purple {
+    background: radial-gradient(circle at top right, rgba(161, 140, 209, 0.4), transparent 70%);
+}
+
+.tint-peach {
+    background: radial-gradient(circle at top right, rgba(250, 208, 196, 0.4), transparent 70%);
+}
+
+.tint-orange {
+    background: radial-gradient(circle at top right, rgba(255, 236, 210, 0.4), transparent 70%);
+}
+
+.tint-rose {
+    background: radial-gradient(circle at top right, rgba(252, 182, 159, 0.4), transparent 70%);
+}
+
+.tint-blue {
+    background: radial-gradient(circle at top right, rgba(137, 207, 240, 0.4), transparent 70%);
+}
+
+.poster-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+    /* Hide image by default if we use glass content, or use a class to toggle */
+    display: none;
+}
+
+/* Restore image display for "Top Moments" row since they ARE images */
+.poster-large {
+    display: block;
+    height: 350px;
+    border-radius: 0;
+    /* Let opacity container handle radius */
+}
+
+.poster-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    opacity: 0.8;
+    /* Always visible slightly? Or keep hover? Let's keep hover but cleaner */
+    transform: translateY(100%);
+    transition: 0.3s;
+    z-index: 5;
+    /* Ensure text is above the emoji icon */
+}
+
+.poster-info h4 {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+    color: #fff;
+    font-family: var(--font-heading);
+    /* Use script font for titles too? Or keep body? Let's use heading for flair */
+    letter-spacing: 1px;
+}
+
+.poster-info p {
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+.row-poster:hover .poster-info {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Utils */
+.home-btn,
+.music-toggle {
+    position: fixed;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    z-index: 100;
+    /* Match button theme optionally */
+    background: rgba(255, 255, 255, 0.1);
+    /* Glassy standard */
+    backdrop-filter: blur(5px);
+
+    color: white;
+    /* White icon for contrast on dark bg */
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.home-btn {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    z-index: 100;
+
+    /* Card.html Exact Match */
+    background: rgba(255, 255, 255, 0.05);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.home-btn:hover {
+    color: #fff;
+    background: rgba(236, 72, 153, 0.2);
+    transform: scale(1.1);
+}
+
+.music-toggle {
+    /* Kept for legacy, though real toggle is in music-toggle.css */
+    display: none;
+}
+
+/* Text Color Fixes for Inner Pages */
+.content,
+.card-inside,
+.reason-card,
+.level,
+.letter-container {
+    color: #333;
+}
+
+/* ------------------------------------------- */
+/* IPHONE STYLE PASSCODE OVERLAY - COLORFUL IOS */
+/* ------------------------------------------- */
+.passcode-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Rich, romantic dark gradient with blur */
+    background: radial-gradient(circle at center, rgba(80, 20, 40, 0.9), rgba(10, 5, 10, 0.95));
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.passcode-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.passcode-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.lock-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+    animation: pulseLock 2s infinite;
+}
+
+@keyframes pulseLock {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+        text-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+
+.passcode-content h2 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+    font-family: var(--font-body);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Dots */
+.passcode-dots {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.dot {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dot.filled {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+    transform: scale(1.2);
+}
+
+/* Keypad */
+.numeric-keypad {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.key-row {
+    display: flex;
+    gap: 35px;
+    justify-content: center;
+    align-items: center;
+}
+
+.key-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    /* Glassy background */
+    backdrop-filter: blur(15px);
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.key-btn:hover {
+    background: rgba(255, 77, 109, 0.2);
+    /* Soft Pink Hover */
+    border-color: rgba(255, 77, 109, 0.5);
+}
+
+.key-btn:active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: scale(0.9);
+}
+
+.key-spacer {
+    width: 80px;
+}
+
+.key-cancel {
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.key-cancel:hover {
+    color: var(--primary-color);
+}
+
+.key-btn:active {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0.95);
+}
+
+.key-spacer {
+    width: 75px;
+}
+
+.key-cancel {
+    width: 75px;
+    height: 75px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Shake Animation */
+.shake {
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+/* ------------------------------------------- */
+/* MARQUEE ANIMATION FOR TOP MOMENTS */
+/* ------------------------------------------- */
+.marquee-container {
+    overflow-x: hidden !important;
+    /* Force hide scrollbar */
+    padding: 20px 0;
+    position: relative;
+    width: 100%;
+}
+
+.marquee-content {
+    display: flex;
+    gap: 15px;
+    width: max-content;
+    /* Ensure width fits all children */
+    animation: scroll 40s linear infinite;
+    /* Adjust speed here */
+}
+
+/* Pause on hover for easier viewing */
+.marquee-content:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+        /* Move half way (since content is duplicated) */
+    }
+}
+
+/* ------------------------------------------- */
+/* VINTAGE LETTER & GLOBAL FONTS */
+/* ------------------------------------------- */
+/* Global Fonts Override to ensure consistency */
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+div,
+a,
+li {
+    font-family: var(--font-body);
+    /* Poppins */
+}
+
+h1,
+h2,
+h3,
+.letter-footer,
+.row-title,
+.hero h1 {
+    font-family: var(--font-heading);
+    /* Bleury Saint */
+}
+
+/* Vintage Paper Container - Realistic Burnt Effect */
+.vintage-paper {
+    background-color: #d7c097;
+    /* Crumpled paper texture overlay */
+    background-image:
+        url('https://www.transparenttextures.com/patterns/aged-paper.png'),
+        linear-gradient(to right, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 0.1)),
+        radial-gradient(circle at center, transparent 0%, rgba(62, 39, 35, 0.4) 100%);
+
+    color: #3e2723;
+    /* Dark brown ink */
+    padding: 80px 60px;
+    /* More padding */
+    position: relative;
+    max-width: 700px;
+    /* Slightly narrower for better proportion */
+    margin: 60px auto;
+    font-family: var(--font-body);
+    font-weight: 600;
+    /* Make text bolder like ink */
+    line-height: 1.8;
+    font-size: 1.15rem;
+
+    /* JAGED EDGES via Clip Path */
+    /* This creates a random-looking polygon */
+    clip-path: polygon(2% 4%, 5% 1%, 10% 4%, 15% 0%, 20% 3%, 25% 1%, 30% 4%, 35% 2%, 40% 5%, 45% 1%, 50% 4%, 55% 2%, 60% 5%, 65% 1%, 70% 4%, 75% 2%, 80% 5%, 85% 1%, 90% 4%, 95% 2%, 98% 5%,
+            100% 10%, 97% 15%, 100% 20%, 98% 25%, 100% 30%, 97% 35%, 100% 40%, 98% 45%, 100% 50%, 96% 55%, 100% 60%, 98% 65%, 100% 70%, 97% 75%, 100% 80%, 98% 85%, 100% 90%, 96% 95%,
+            98% 100%, 90% 97%, 85% 100%, 80% 96%, 75% 100%, 70% 97%, 65% 100%, 60% 96%, 55% 100%, 50% 97%, 45% 100%, 40% 96%, 35% 100%, 30% 97%, 25% 100%, 20% 96%, 15% 100%, 10% 97%, 5% 100%, 0% 96%,
+            2% 90%, 0% 85%, 3% 80%, 0% 75%, 2% 70%, 0% 65%, 3% 60%, 0% 55%, 2% 50%, 0% 45%, 3% 40%, 0% 35%, 2% 30%, 0% 25%, 3% 20%, 0% 15%, 2% 10%);
+
+    /* DEPTH DROP SHADOW (Applied to the parent or via filter since clip-path cuts box-shadow) */
+    /* Note: box-shadow doesn't work well with clip-path, so we use filter on the element itself works in modern browsers */
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+
+    /* BURNT EDGES (Inset Shadow) */
+    /* We use a pseudo-element for the burnt edge overlay to ensure it sits on top if needed, 
+       but inset box-shadow works nicely inside the element */
+    box-shadow: inset 0 0 60px 30px rgba(62, 39, 35, 0.8), inset 0 0 120px 60px rgba(62, 39, 35, 0.3);
+}
+
+/* Texture Overlay */
+.vintage-paper::before {
+    display: none;
+    /* Removed old overlay */
+}
+
+/* Handwritten Feel */
+.letter-body {
+    color: #2b1d16;
+    text-shadow: 0 0 1px rgba(43, 29, 22, 0.3);
+    /* Slight bleed effect */
+}
+
+.letter-header {
+    margin-bottom: 50px;
+    border-bottom: 2px dashed rgba(62, 39, 35, 0.3);
+    padding-bottom: 10px;
+}
+
+.letter-header p {
+    color: #5d4037;
+    font-weight: 600;
+}
+
+/* ------------------------------------------- */
+/* VIDEO SECTION STYLES */
+/* ------------------------------------------- */
+.video-section {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 50px;
+}
+
+.video-frame {
+    position: relative;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 20px;
+    overflow: hidden;
+    /* Premium Frame & Glow */
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.5),
+        /* Deep shadow */
+        0 0 30px rgba(255, 77, 109, 0.3);
+    /* Soft glow */
+    transform: perspective(1000px) rotateX(2deg);
+    /* Subtle 3D tilt */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-frame:hover {
+    transform: perspective(1000px) rotateX(0deg) scale(1.02);
+    box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.6),
+        0 0 50px rgba(255, 77, 109, 0.5);
+}
+
+.video-frame video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    /* Inner radius */
+}
+
+/* ------------------------------------------- */
+/* SHARED HEARTBEAT BACKGROUND (Moved from home.html) */
+/* ------------------------------------------- */
+.heartbeat-bg {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center,
+            rgba(244, 114, 182, 0.15),
+            rgba(244, 114, 182, 0.05),
+            transparent 70%);
+    animation: heartbeat-global 6s ease-in-out infinite;
+    z-index: -2;
+    pointer-events: none;
+}
+
+@keyframes heartbeat-global {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+/* 3D HOLOGRAPHIC CARD SUPPORT */
+.float-card {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    transition: transform 0.1s ease-out;
+
+    /* Overwrite for smoother mouse follow */
+    will-change: transform;
+}
+
+/* DREAMY SCROLLBAR */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(236, 72, 153, 0.5);
+    /* Semi-transparent Pink */
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, 0.8);
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+/* ------------------------------------------- */
+/* GLASS LETTER STYLES (Redesign) */
+/* ------------------------------------------- */
+.glass-letter-container {
+    max-width: 800px;
+    margin: 60px auto;
+    position: relative;
+    z-index: 10;
+
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(244, 114, 182, 0.1);
+
+    border-radius: 12px;
+    padding: 60px 50px;
+    color: #e2e8f0;
+
+    animation: floatIn 1s ease-out forwards;
+}
+
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.letter-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.letter-header-styled {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3.5rem;
+    color: #f472b6;
+    text-shadow: 0 0 15px rgba(244, 114, 182, 0.4);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.letter-signature {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.5rem;
+    color: #f472b6;
+    margin-top: 40px;
+    text-align: right;
+}
+
+.letter-meta {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: right;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.glass-polaroid {
+    background: white;
+    padding: 12px 12px 30px 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: rotate(-3deg);
+    transition: transform 0.3s ease;
+    width: 180px;
+}
+
+.glass-polaroid:hover {
+    transform: rotate(0) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.glass-polaroid img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: sepia(20%);
+}
+
+/* ------------------------------------------- */
+/* MOBILE RESPONSIVENESS TWEAKS */
+/* ------------------------------------------- */
+@media (max-width: 768px) {
+
+    /* Hide Custom Cursor on Touch Devices */
+    #fingerprint-cursor {
+        display: none !important;
+    }
+
+    /* Restore Default Cursor interactions */
+    body,
+    a,
+    button,
+    .clickable {
+        cursor: auto !important;
+    }
+
+    /* Adjust Glass Letter Padding */
+    .glass-letter-container {
+        padding: 40px 25px;
+        margin: 30px 15px;
+    }
+
+    .letter-header-styled {
+        font-size: 2.5rem;
+    }
+
+    /* Adjust Hero Title */
+    .hero h1 {
+        font-size: 2.5rem;
+        /* Fallback */
+        font-size: clamp(2.5rem, 8vw, 3.5rem);
+    }
+}
+
+/* MONKEY LOGIN STYLES */
+.monkey-login-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    width: 350px;
+    padding: 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.animcon {
+    background-image: url('https://raw.githubusercontent.com/naaficodes/Monkey-Login/master/images/monkey.gif');
+
+    background-size: cover;
+
+    background-position: center;
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+#hands {
+    width: 120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 110%;
+    /* Hidden initially */
+    transition: margin-top 0.3s ease-out;
+}
+
+.formcon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.tb {
+    height: 50px;
+    width: 100%;
+    border-radius: 25px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    text-indent: 20px;
+    font-size: 1.1rem;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.tb:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
+}
+
+.sbutton {
+    height: 45px;
+    width: 100%;
+    border-radius: 25px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+}
+
+.sbutton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.6);
+}
+
+.cancel-monkey {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 10px;
+    box-shadow: none;
+    font-size: 0.9rem;
+}
+
+.cancel-monkey:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ------------------------------------------- */
+/* HERO SUBLINE */
+/* ------------------------------------------- */
+.hero-subline {
+    opacity: 0;
+    animation: fadeUp 1.5s ease forwards;
+    animation-delay: 2s;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------------------------------------------- */
+/* QUIET SECTION (When You're Not Around) */
+/* ------------------------------------------- */
+.quiet-section {
+    min-height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+    margin-top: 50px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.quiet-section p {
+    font-family: 'Great Vibes', cursive;
+    /* Or keeping it simple as requested? "Simple section" might imply sans-serif but "Great Vibes" fits the "powerful" vibe. Let's stick to system font for "Simple" or 'Poppins' for clean. */
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2rem;
+    line-height: 2;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    opacity: 0.7;
+    animation: breathe 6s ease-in-out infinite;
+}
+
+@keyframes breathe {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+}
+
+/* ------------------------------------------- */
+/* HIDDEN EASTER EGG */
+/* ------------------------------------------- */
+.easter-egg {
+    text-align: center;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.15);
+    /* Very faint */
+    margin-top: 100px;
+    margin-bottom: 50px;
+    transition: all 0.5s ease;
+    cursor: default;
+}
+
+.easter-egg:hover {
+    color: rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.footer-love {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 30px;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* ------------------------------------------- */
+/* ------------------------------------------- */
+/* COMPACT CRYSTAL GRID - Space Efficient & Premium */
+/* ------------------------------------------- */
+.float-stream-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    /* Auto Grid */
+    gap: 20px;
+    padding: 20px;
+    max-width: 1000px;
+    /* Wider container for grid */
+    margin: 0 auto;
+}
+
+/* THE CRYSTAL CARD */
+.float-card {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    /* More compact height */
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    overflow: hidden;
+    /* For shine effect */
+    transition: all 0.3s ease;
+}
+
+/* Decoration: Orbiting Stardust (Snake Border) */
+.float-card {
+    overflow: hidden;
+    /* Keep stars inside radius */
+}
+
+.stardust {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.stardust span {
+    position: absolute;
+    display: block;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9));
+    /* Stardust tail */
+    border-radius: 4px;
+    /* Soft ends */
+}
+
+/* TOP */
+.stardust span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    animation: starOrbitTop 3s linear infinite;
+    animation-delay: 0s;
+    /* Start immediately */
+}
+
+/* RIGHT */
+.stardust span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.9));
+    animation: starOrbitRight 3s linear infinite;
+    animation-delay: 0.75s;
+    /* 1/4 of total time */
+}
+
+/* BOTTOM */
+.stardust span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, rgba(255, 255, 255, 0.9));
+    animation: starOrbitBottom 3s linear infinite;
+    animation-delay: 1.5s;
+    /* 1/2 of total time */
+}
+
+/* LEFT */
+.stardust span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, rgba(255, 255, 255, 0.9));
+    animation: starOrbitLeft 3s linear infinite;
+    animation-delay: 2.25s;
+    /* 3/4 of total time */
+}
+
+/* KEYFRAMES */
+@keyframes starOrbitTop {
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes starOrbitRight {
+    0% {
+        top: -100%;
+    }
+
+    50%,
+    100% {
+        top: 100%;
+    }
+}
+
+@keyframes starOrbitBottom {
+    0% {
+        right: -100%;
+    }
+
+    50%,
+    100% {
+        right: 100%;
+    }
+}
+
+@keyframes starOrbitLeft {
+    0% {
+        bottom: -100%;
+    }
+
+    50%,
+    100% {
+        bottom: 100%;
+    }
+}
+
+/* Glowing Pulse Head (Optional, pure gradients look like comets) */
+.stardust span::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #fff, 0 0 20px #ff00de;
+    /* Pink core */
+}
+
+/* Align dots to lead the comet */
+.stardust span:nth-child(1)::after {
+    right: 0;
+    top: -1px;
+}
+
+.stardust span:nth-child(2)::after {
+    bottom: 0;
+    left: -1px;
+}
+
+.stardust span:nth-child(3)::after {
+    left: 0;
+    bottom: -1px;
+}
+
+.stardust span:nth-child(4)::after {
+    top: 0;
+    right: -1px;
+}
+
+/* Decoration: Glowing Top Border (Restored) */
+.float-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(236, 72, 153, 0.8), transparent);
+    opacity: 0.8;
+    /* Increased opacity for visibility */
+    z-index: 2;
+    /* Sit above stardust background */
+}
+
+/* Decoration: Corner Sparkle (Restored) */
+.float-card::after {
+    content: '✦';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+/* Hover Interaction: Lift & Glow */
+.float-card:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+    border-color: rgba(236, 72, 153, 0.4);
+    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2);
+}
+
+.float-card:hover::after {
+    color: #ffd700;
+    /* Gold sparkle on hover */
+    transform: rotate(45deg) scale(1.2);
+}
+
+/* Content Styling */
+.float-card .glass-content {
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    /* Icon + Text Layout */
+    align-items: center;
+    padding: 0 20px;
+    gap: 15px;
+}
+
+.float-card .emoji-icon {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+}
+
+.float-card .card-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.float-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+.float-card p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 3px 0 0 0;
+}
+
+/* Animation: Subtle Pulse on Load */
+@keyframes softPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Delays (Optional if we want staggering) */
+.delay-1 {
+    animation: none;
+}
+
+.delay-2 {
+    animation: none;
+}
+
+.delay-3 {
+    animation: none;
+}
+
+/* NEW: Horizontal Scroll on Mobile? Or Stack? Stack is safer. */
+
+.deck-controls {
+    display: none;
+    /* Hide old controls */
+}
+
+/* MOBILE ADJUSTMENTS */
+@media (max-width: 768px) {
+    .deck-container {
+        height: 450px;
+    }
+
+    .card-stack {
+        width: 280px;
+        height: 380px;
+    }
+
+    /* Reduce fan spread on mobile */
+    .deck-card {
+        transform:
+            translateY(calc(var(--i) * 3px)) scale(calc(1 - var(--i) * 0.05));
+    }
+
+    .float-stream-container {
+        grid-template-columns: 1fr;
+        /* Single column on mobile */
+        gap: 15px;
+        padding: 10px 20px;
+    }
+
+    .float-card {
+        height: 100px;
+        /* Even smaller on mobile */
+    }
+
+    .float-card .emoji-icon {
+        font-size: 1.8rem;
+    }
+
+    .float-card h3 {
+        font-size: 1.2rem;
+    }
+
+    /* Performance: Reduce blur on mobile */
+    .float-card {
+        height: 100px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+}
+
+/* Golden Tint for Coupons */
+.tint-gold {
+    background: radial-gradient(circle at top left, rgba(255, 215, 0, 0.15), rgba(0, 0, 0, 0));
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* HOLOGRAPHIC GLARE */
+.glare {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+    mix-blend-mode: overlay;
+    z-index: 10;
+}
+
+/* Liquid Glass Home Button */
+.glass-home-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
+    /* More visible */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    /* Stronger border */
+    box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.3),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 2000;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.glass-home-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.4s, transform 0.4s;
+}
+
+.glass-home-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: #fff;
+    transform: scale(1.1) rotate(-90deg);
+    /* Playful rotate on hover */
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.glass-home-btn:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.glass-home-btn i {
+    z-index: 2;
+    transition: transform 0.4s;
+}
+
+.glass-home-btn:hover i {
+    transform: rotate(90deg);
+    /* Counter-rotate icon to keep it straight or spin separately */
+}
+
+/* ------------------------------------------- */
+/* TOUCH & MOBILE OPTIMIZATIONS */
+/* ------------------------------------------- */
+
+/* 1. Remove Tap Highlight color (makes it feel like an app) */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 2. Tactile Feedback for Cards (Active State) */
+.float-card:active,
+.coupon-wrapper:active .coupon-inner,
+button:active,
+.glass-home-btn:active,
+.reset-btn:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 3. Specific adjustments for Hover vs Touch */
+@media (hover: none) {
+
+    /* Disable hover lift on touch to prevent sticky states */
+    .float-card:hover,
+    .coupon-wrapper:hover .coupon-inner,
+    .glass-home-btn:hover {
+        transform: none;
+        box-shadow: none;
+        /* Keep base shadow */
+    }
+
+    /* Ensure icons don't get stuck rotated */
+    .glass-home-btn:hover i {
+        transform: none;
+    }
+
+    .reset-btn,
+    .glass-home-btn {
+        min-width: 44px;
+        min-height: 44px;
+        /* Touch target size */
+    }
+}
+
+/* 3D HOLOGRAPHIC CARD SUPPORT */
+.float-card {
+    transform-style: preserve-3d;
+    /* transition: transform 0.1s ease-out; -- Handling in JS/CSS carefully to not break hover */
+    will-change: transform;
+}
+
+/* DREAMY SCROLLBAR */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(236, 72, 153, 0.5);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, 0.8);
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+/* SPECIAL HUG VIDEO STYLING */
+.video-section {
+    width: 100%;
+    max-width: 800px;
+    /* Limit width */
+    margin: 20px auto 60px;
+    /* Spacing */
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    /* Default aspect ratio */
+    background: #000;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+.video-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* REMOVES BLACK BORDERS */
+    display: block;
+}
+
+/* --- MICRO-INTERACTIONS CSS --- */
+
+/* 1. Magic Content Particles */
+.magic-particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+/* 2. Love Battery */
+.love-battery {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 999;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.battery-icon {
+    width: 24px;
+    height: 12px;
+    border: 2px solid #fff;
+    border-radius: 3px;
+    position: relative;
+    padding: 1px;
+    display: flex;
+    align-items: center;
+}
+
+.battery-icon::after {
+    content: '';
+    width: 2px;
+    height: 6px;
+    background: #fff;
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 0 2px 2px 0;
+}
+
+.battery-level {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #ff4d6d, #ffd700);
+    display: block;
+    border-radius: 1px;
+    box-shadow: 0 0 5px rgba(255, 77, 109, 0.8);
+    background-size: 200% 100%;
+    animation: batteryCharge 2s linear infinite;
+}
+
+@keyframes batteryCharge {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: 0 0;
+    }
+}
+
+/* 5. Scratch Card Modal */
+.scratch-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 20000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.3s ease;
+}
+
+.scratch-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+
+.scratch-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    max-width: 90%;
+    width: 400px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.close-scratch {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.scratch-container {
+    position: relative;
+    width: 300px;
+    height: 150px;
+    margin: 20px auto;
+    user-select: none;
+}
+
+.scratch-secret {
+    position: absolute;
+    inset: 0;
+    background: #ffecf2;
+    border: 2px dashed #ff4d6d;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ff4d6d;
+    z-index: 1;
+}
+
+.scratch-secret h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+}
+
+canvas#scratchCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    border-radius: 10px;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23000" d="M20 2H4c-1.1 0-2 .9-2 2v16l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>') 12 12, auto;
+}
+
+.scratch-hint {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Hug Station</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="music-toggle.css">
+    <script src="auth.js"></script>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* WARM VIGNETTE OVERLAY */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0) 30%, rgba(236, 72, 153, 0.1) 70%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+            transition: all 0.5s;
+            opacity: 0.5;
+            z-index: 10;
+        }
+
+        .vignette.active {
+            box-shadow: inset 0 0 100px 50px rgba(236, 72, 153, 0.3);
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 10%, rgba(236, 72, 153, 0.3) 60%, rgba(0, 0, 0, 0.9) 100%);
+            opacity: 1;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 20;
+            position: relative;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: #ec4899;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            transition: opacity 0.5s;
+        }
+
+        /* THE HUG BUTTON */
+        .hug-btn-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+        }
+
+        .hug-btn {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(236, 72, 153, 0.5);
+            color: #ec4899;
+            font-size: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.2s, background 0.5s;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+        }
+
+        .hug-btn:active,
+        .hug-btn.active {
+            transform: scale(0.9);
+            background: rgba(236, 72, 153, 0.2);
+        }
+
+        /* PROGRESS RING */
+        .progress-ring {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 130px;
+            height: 130px;
+            transform: rotate(-90deg);
+            pointer-events: none;
+        }
+
+        .progress-circle {
+            fill: transparent;
+            stroke: #ec4899;
+            stroke-width: 4;
+            stroke-dasharray: 400;
+            /* Approx circumference */
+            stroke-dashoffset: 400;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .instruction {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+        }
+
+        /* ANIMATED ARMS CONTAINER */
+        .arm {
+            position: fixed;
+            top: 50%;
+            height: 100px;
+            width: 45vw;
+            transform: translateY(-50%);
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.2s, left 0.1s linear, right 0.1s linear;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+            background: none;
+            /* Reset gradient */
+            box-shadow: none;
+            border-radius: 0;
+        }
+
+        .arm-left {
+            left: -45vw;
+            /* Start off screen */
+            flex-direction: row;
+            /* Sleeve then Hand */
+        }
+
+        .arm-right {
+            right: -45vw;
+            /* Start off screen */
+            flex-direction: row-reverse;
+            /* Sleeve then Hand */
+        }
+
+        /* SLEEVE (The Cloth) */
+        .sleeve {
+            flex: 1;
+            height: 100%;
+            background: linear-gradient(180deg, #be185d 0%, #db2777 50%, #be185d 100%);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            /* For cuff pseudo-element */
+        }
+
+        .arm-left .sleeve {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .arm-right .sleeve {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        /* HAND (The Skin) */
+        .hand {
+            width: 70px;
+            height: 85%;
+            background: #ffdbac;
+            /* Fair skin tone */
+            position: relative;
+        }
+
+        .arm-left .hand {
+            border-radius: 0 40px 40px 0;
+            /* Rounded tip */
+            margin-left: -5px;
+            /* Connect */
+        }
+
+        .arm-right .hand {
+            border-radius: 40px 0 0 40px;
+            margin-right: -5px;
+            /* Connect */
+        }
+
+        /* THUMB (Pseudo) */
+        .hand::before {
+            content: '';
+            position: absolute;
+            background: #ffdbac;
+            width: 30px;
+            height: 40px;
+            top: -15px;
+            border-radius: 20px;
+            z-index: -1;
+        }
+
+        .arm-left .hand::before {
+            left: 10px;
+            transform: rotate(-30deg);
+        }
+
+        .arm-right .hand::before {
+            right: 10px;
+            transform: rotate(30deg);
+        }
+
+        /* CUFF (Pseudo on Sleeve) */
+        .sleeve::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 110%;
+            background: #9d174d;
+            /* Darker cuff */
+            top: -5%;
+        }
+
+        .arm-left .sleeve::after {
+            right: 0;
+        }
+
+        .arm-right .sleeve::after {
+            left: 0;
+        }
+
+        /* Remove old pseudo overrides by ensuring they don't apply or resetting them */
+        .arm::after {
+            display: none;
+        }
+
+
+        /* Arms Active State (CSS Class for simplicity, but JS will drive progress) */
+        .embracing .arm {
+            opacity: 1;
+        }
+
+        /* SUCCESS STATE */
+        .success-overlay {
+            position: fixed;
+            inset: 0;
+            background: #ec4899;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+        }
+
+        .success-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-msg {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: scale(0.5);
+            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .success-overlay.show .success-msg {
+            transform: scale(1);
+        }
+
+        .nav-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            text-decoration: none;
+            z-index: 50;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+    <script src="music-toggle.js"></script>
+
+    <div class="vignette" id="vignette"></div>
+
+    <!-- ARMS -->
+    <div class="arm arm-left" id="arm-left">
+        <div class="sleeve"></div>
+        <div class="hand"></div>
+    </div>
+    <div class="arm arm-right" id="arm-right">
+        <div class="sleeve"></div>
+        <div class="hand"></div>
+    </div>
+
+    <div class="container" id="main-content">
+        <h1 class="title">Need a Hug?</h1>
+
+        <div class="hug-btn-container">
+            <svg class="progress-ring">
+                <circle class="progress-circle" cx="65" cy="65" r="60"></circle>
+            </svg>
+            <button class="hug-btn" id="hugBtn">
+                <i class="fas fa-heart"></i>
+            </button>
+        </div>
+
+        <p class="instruction" id="instruction">Press & Hold for a warm embrace...</p>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-overlay" id="success">
+        <h1 class="success-msg">Sending Warmth... ❤️</h1>
+        <div style="width: 300px; max-width: 80%; margin: 20px auto; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <video autoplay loop muted playsinline style="width: 100%; display: block;">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-young-couple-hugging-tightly-at-sunset-32189-large.mp4" type="video/mp4">
+            </video>
+        </div>
+        <p style="margin-top: 10px; font-size: 1.2rem;">( Imagine I'm holding you tight )</p>
+        <button onclick="resetHug()"
+            style="margin-top: 50px; padding: 10px 30px; border-radius: 20px; border:none; background: white; color: #ec4899; font-weight: bold; cursor: pointer;">Again?</button>
+    </div>
+
+    <script>
+        const btn = document.getElementById('hugBtn');
+        const circle = document.querySelector('.progress-circle');
+        const armLeft = document.getElementById('arm-left');
+        const armRight = document.getElementById('arm-right');
+        const vignette = document.getElementById('vignette');
+        const instr = document.getElementById('instruction');
+
+        let progress = 0;
+        let animationId;
+        const HOLD_TIME = 3000; // 3 seconds for full hug
+        let isHolding = false;
+
+        // Haptic helper
+        function vibrate(pattern) {
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
+
+        function startHug(e) {
+            e.preventDefault(); // Prevent text selection/menu
+            isHolding = true;
+            btn.classList.add('active');
+            instr.style.opacity = '0';
+            vignette.classList.add('active');
+
+            // Start Loop
+            lastTime = Date.now();
+            requestAnimationFrame(updateHug);
+        }
+
+        function endHug(e) {
+            e.preventDefault();
+            isHolding = false;
+            btn.classList.remove('active');
+            instr.style.opacity = '1';
+            vignette.classList.remove('active');
+        }
+
+        let lastTime = 0;
+        function updateHug() {
+            if (!isHolding) {
+                // Decay progress
+                if (progress > 0) {
+                    progress -= 2.5; // Fast decay
+                    if (progress < 0) progress = 0;
+                    draw(progress);
+                    requestAnimationFrame(updateHug);
+                }
+                return;
+            }
+
+            // Increase progress
+            const dt = Date.now() - lastTime;
+            // progress is 0 to 100
+            // Increment logic: 100% in 3000ms -> 33.3% per sec
+            // per frame (16ms) -> ~0.5
+            progress += 0.6; // Slightly faster manual tune
+
+            // Haptic heartbeat simulation at intervals
+            // e.g., at 20%, 50%, 80%
+            if (Math.abs(progress - 20) < 1) vibrate(20);
+            if (Math.abs(progress - 50) < 1) vibrate(20);
+            if (Math.abs(progress - 80) < 1) vibrate(40);
+
+            if (progress >= 100) {
+                progress = 100;
+                completeHug();
+            } else {
+                draw(progress);
+                requestAnimationFrame(updateHug);
+            }
+        }
+
+        function draw(p) {
+            // Circle stroke
+            const circumference = 400;
+            const offset = circumference - (p / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+
+            // Arms Move
+            // 0% -> Left: -45vw, Right: -45vw
+            // 100% -> Left: -5vw, Right: -5vw (Assuming wrap)
+            // Let's bring them to cover edges comfortably
+
+            // Map 0-100 to -45 to -5
+            const armPos = -45 + (p / 100) * 40;
+
+            armLeft.style.opacity = Math.min(1, p / 30); // Fade in early
+            armRight.style.opacity = Math.min(1, p / 30);
+
+            armLeft.style.left = `${armPos}vw`;
+            armRight.style.right = `${armPos}vw`;
+
+            // Scale button slightly
+            btn.style.transform = `scale(${1 - (p / 300)})`; // Shrink center as arms close
+        }
+
+        function completeHug() {
+            vibrate([50, 50, 200]); // Long success vibe
+            document.getElementById('success').classList.add('show');
+            document.getElementById('main-content').style.opacity = '0';
+
+            // Maximum hug state
+            armLeft.style.left = '-5vw';
+            armRight.style.right = '-5vw';
+        }
+
+        function resetHug() {
+            progress = 0;
+            draw(0);
+            document.getElementById('success').classList.remove('show');
+            document.getElementById('main-content').style.opacity = '1';
+            instr.style.opacity = '1';
+            vignette.classList.remove('active');
+        }
+
+        // Events
+        btn.addEventListener('mousedown', startHug);
+        btn.addEventListener('touchstart', startHug);
+
+        btn.addEventListener('mouseup', endHug);
+        btn.addEventListener('mouseleave', endHug);
+        btn.addEventListener('touchend', endHug);
+        btn.addEventListener('touchcancel', endHug);
+
+    </script>
+</body>
+
+</html>

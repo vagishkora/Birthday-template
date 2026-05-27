@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Our Story - Janes Birthday</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📔</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="music-toggle.css"> <!-- Global Music Toggle -->
+    <link rel="stylesheet" href="cursor.css"> <!-- Custom Cursor -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* VINTAGE BOOK STYLES */
+        body {
+            background-color: #020617;
+            /* Standard Dark Blue */
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Removed #shader-container */
+
+        .journal-hero {
+            display: none;
+        }
+
+        .book-scene {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1500px;
+        }
+
+        .book {
+            width: 900px;
+            /* Larger size */
+            height: 650px;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+            transition: transform 1s;
+        }
+
+        .page {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            top: 0;
+            left: 50%;
+            /* Right stack */
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .front,
+        .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            padding: 40px;
+            box-sizing: border-box;
+            background-color: #fdf6e3;
+            /* Opaque Base */
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            overflow: hidden;
+            /* Hide scrollbars visually */
+            box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.1);
+            /* Inner spine shadow */
+        }
+
+        .front {
+            z-index: 2;
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .back {
+            transform: rotateY(180deg);
+            z-index: 1;
+            border-right: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* Flipped State */
+        .page.flipped {
+            transform: rotateY(-180deg);
+            z-index: 50;
+            /* Bring to top during flip */
+        }
+
+        /* Typography & Images */
+        h2 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            color: #590d22;
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #590d22;
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-family: 'Poppins', serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #4a3b32;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .journal-text {
+            max-height: calc(100% - 40px);
+            overflow-y: auto;
+            /* Scroll if needed */
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE */
+            padding-bottom: 20px;
+        }
+
+        .journal-text::-webkit-scrollbar {
+            display: none;
+            /* Chrome */
+        }
+
+        p.page-number {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #888;
+            left: 0;
+            z-index: 5;
+        }
+
+        img {
+            width: 85%;
+            margin: 10px auto;
+            display: block;
+            border: 5px solid white;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            transform: rotate(-2deg);
+            max-height: 40%;
+            object-fit: cover;
+        }
+
+        /* Cover Specifics */
+
+
+        .page.cover .front {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: none !important;
+            border: none !important;
+            width: 100% !important;
+            height: 100% !important;
+            overflow: hidden !important;
+        }
+
+        .cover-img {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: none !important;
+            object-fit: cover !important;
+            border: none !important;
+            box-shadow: none !important;
+            transform: none !important;
+            margin: 0 !important;
+            display: block !important;
+            border-radius: 0 5px 5px 0;
+            padding: 0 !important;
+        }
+
+        /* Overlay */
+        #note-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SHOOTING STARS BACKGROUND */
+        #shooting-stars-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(ellipse at center, rgba(23, 23, 40, 1) 0%, rgba(0, 0, 0, 1) 100%);
+            overflow: hidden;
+        }
+
+        /* Static Twinkling Stars */
+        .stars-static {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0, 0, 0, 0)),
+                radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0, 0, 0, 0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: twinkle 5s ease-in-out infinite;
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shooting Stars Background Container -->
+    <div id="shooting-stars-bg">
+        <div class="stars-static"></div>
+        <!-- Shooting Stars JS will append SVGs here -->
+    </div>
+
+    <!-- Navigation -->
+    <a href="home.html" class="home-btn"><i class="fas fa-home"></i></a>
+    <button class="music-toggle" onclick="toggleMusic()"><i class="fas fa-music"></i></button>
+
+    <!-- Header Image -->
+    <div class="journal-hero">
+        <h1 style="font-size: 5rem; text-shadow: 0 4px 15px rgba(0,0,0,0.5);">The Beautiful Journey</h1>
+    </div>
+
+    <!-- Vintage Book Scene -->
+    <div class="book-scene">
+        <div class="book" id="myBook">
+            <!-- Cover Page -->
+            <div class="page cover" onclick="flipPage(this)" style="z-index: 6;">
+                <div class="front" style="padding: 0 !important; border: none !important; background: none !important; overflow: hidden !important;">
+                    <img src="https://picsum.photos/seed/portfolio/800/600" class="cover-img" alt="Journal Cover" style="width: 100% !important; height: 100% !important; max-height: none !important; object-fit: cover !important; margin: 0 !important; border-radius: 0 5px 5px 0;">
+                </div>
+                <div class="back">
+                    <h2>INTRODUCTION</h2>
+                    <p class="journal-text">
+                        A JOURNEY OF GROWTH
+                        <br><br>
+                        This journal is a space dedicated to capturing memories, milestones, and reflections. 
+                        Every great project starts with a simple idea, and grows through dedication and creativity.
+                        <br><br>
+                        Turn the pages to explore a beautifully designed interactive book, crafted with love for web development, 
+                        showcasing CSS 3D transforms, JavaScript interactions, and a touch of magic.
+                    </p>
+                    <p style="text-align: center; margin-top: 300px; font-style: italic; color: #888;">
+                        Click to turn the page...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Page 1 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>The Spark</h3>
+                    <p class="journal-text">
+                        It always starts with a spark of inspiration. A moment where the pieces align, and a vision 
+                        begins to take shape. Building interactive experiences for the web is about more than just 
+                        code; it's about storytelling.
+                        <br><br>
+                        "The best way to predict the future is to invent it."
+                        <br><br>
+                        Through late nights and countless lines of code, this project evolved from a blank canvas 
+                        into a dynamic, immersive experience.
+                    </p>
+                    <p class="page-number">- 1 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        The journey of learning and creating is never a straight line. There are bugs to fix, 
+                        designs to tweak, and performance to optimize. But seeing the final product come to life 
+                        makes every challenge worthwhile.
+                        <br><br>
+                        This specific book component uses nested 3D transforms, custom CSS shading, and vanilla 
+                        JavaScript to create a realistic page-flipping effect that feels natural and engaging.
+                    </p>
+                    <p class="page-number">- 2 -</p>
+                </div>
+            </div>
+
+            <!-- Page 2 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Shared Smiles</h3>
+                    <p class="journal-text">
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 50% !important;">
+                        <br>
+                        Every smile we share adds another beautiful chapter to this story.
+                    </p>
+                    <p class="page-number">- 3 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        There is magic in the little things. The quiet afternoons, the unexpected laughs, and the comfort of just being together.
+                        <br><br>
+                        These are the moments that weave themselves into the fabric of our journey.
+                    </p>
+                    <p class="page-number">- 4 -</p>
+                </div>
+            </div>
+
+            <!-- Page 3 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Adventures Ahead</h3>
+                    <p class="journal-text">
+                        The horizon is vast, and the possibilities are endless. I can't wait to see where the road takes us next.
+                        <br><br>
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 40% !important;">
+                    </p>
+                    <p class="page-number">- 5 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        Through all the ups and downs, the greatest adventure has simply been finding our way together.
+                        <br><br>
+                        Let's continue to dream, explore, and build something beautiful.
+                    </p>
+                    <p class="page-number">- 6 -</p>
+                </div>
+            </div>
+
+            <!-- Page 4 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Unbreakable Bonds</h3>
+                    <p class="journal-text">
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 50% !important;">
+                        <br>
+                        Like the strongest of threads, our bond holds everything together perfectly.
+                    </p>
+                    <p class="page-number">- 7 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        No matter where life takes us, I know we have the strength to weather any storm. 
+                        <br><br>
+                        You are my constant, my anchor, and my favorite person.
+                    </p>
+                    <p class="page-number">- 8 -</p>
+                </div>
+            </div>
+
+            <!-- Page 5 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Visual Harmony</h3>
+                    <p class="journal-text">
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Inspiration" style="max-height: 50% !important;">
+                        <br>
+                        Finding harmony in design is just like finding harmony in life.
+                    </p>
+                    <p class="page-number">- 9 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        We continue to build, learn, and grow. Every line of code, every memory created, adds to this beautiful tapestry.
+                    </p>
+                    <p class="page-number">- 10 -</p>
+                </div>
+            </div>
+
+            <!-- Page 6 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Building Dreams</h3>
+                    <p class="journal-text">
+                        A dream is just a vision until you put in the work to make it real. 
+                        We take things one step at a time.
+                        <br><br>
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 40% !important;">
+                    </p>
+                    <p class="page-number">- 11 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        The foundation of any great project or relationship is trust, patience, and consistency.
+                        <br><br>
+                        "Slow and steady wins the race."
+                    </p>
+                    <p class="page-number">- 12 -</p>
+                </div>
+            </div>
+
+            <!-- Page 7 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Silent Understanding</h3>
+                    <p class="journal-text">
+                        Sometimes the best moments are the quiet ones, where words aren't needed.
+                        <br><br>
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 40% !important;">
+                    </p>
+                    <p class="page-number">- 13 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        In the silence, we find comfort. 
+                        In the pauses, we find clarity.
+                    </p>
+                    <p class="page-number">- 14 -</p>
+                </div>
+            </div>
+
+            <!-- Page 8 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Endless Horizons</h3>
+                    <p class="journal-text">
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 50% !important;">
+                        <br>
+                        There is always something new to discover, something more to explore.
+                    </p>
+                    <p class="page-number">- 15 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        Every day brings a new opportunity to learn and to experience the world differently.
+                    </p>
+                    <p class="page-number">- 16 -</p>
+                </div>
+            </div>
+
+            <!-- Page 9 -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>The Next Chapter</h3>
+                    <p class="journal-text">
+                        As we turn these pages, we realize that the story is far from over. 
+                        In fact, it is just beginning.
+                        <br><br>
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Memory" style="max-height: 40% !important;">
+                    </p>
+                    <p class="page-number">- 17 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        We look forward to writing many more chapters, filled with joy, challenges, and success.
+                    </p>
+                    <p class="page-number">- 18 -</p>
+                </div>
+            </div>
+
+            <!-- Page 10 (The End) -->
+            <div class="page" onclick="flipPage(this)">
+                <div class="front">
+                    <h3>Reflections</h3>
+                    <p class="journal-text">
+                        <img src="https://placehold.co/800x600/1a1a2e/ffffff?text=Pics+Here" alt="Inspiration" style="max-height: 50% !important;">
+                        <br>
+                        Looking back, everything makes sense. The path was exactly as it should have been.
+                    </p>
+                    <p class="page-number">- 19 -</p>
+                </div>
+                <div class="back">
+                    <p class="journal-text">
+                        Thank you for taking the time to explore this interactive piece. 
+                        It stands as a testament to the power of modern web technologies and the endless possibilities 
+                        they provide for creative expression.
+                        <br><br>
+                        Keep exploring, keep building, and never stop learning.
+                        <br><br>
+                        <strong>The End.</strong>
+                    </p>
+                    <p class="page-number">- 20 -</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+
+        // --- BOOK FLIP LOGIC ---
+        function updateZIndex() {
+            const pages = document.querySelectorAll('.page');
+            const total = pages.length;
+
+            pages.forEach((page, i) => {
+                let z;
+                if (page.classList.contains('flipped')) {
+                    // Flipped (Left Stack): Ascending Order (Index 0 at bottom, Index Last at top)
+                    z = i + 1;
+                } else {
+                    // Unflipped (Right Stack): Descending Order (Index 0 at top, Index Last at bottom)
+                    z = total - i + 1;
+                }
+                page.style.zIndex = z;
+            });
+        }
+
+        function flipPage(el) {
+            // Toggle State
+            if (el.classList.contains('flipped')) {
+                el.classList.remove('flipped');
+            } else {
+                el.classList.add('flipped');
+            }
+
+            // Set Z-Indexes for static states
+            updateZIndex();
+
+            // Boost the moving page temporarily so it flies OVER others
+            el.style.zIndex = 1000;
+
+            // Restore correct stacking after animation (1.2s CSS transition)
+            setTimeout(() => {
+                updateZIndex();
+            }, 1200);
+        }
+
+        // Initialize on Load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateZIndex();
+        });
+    </script>
+    <!-- SHADER BACKGROUND -->
+    <div id="shader-container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        /**
+         * SHADER ANIMATION PORT
+         * Original: React Component "ShaderAnimation"
+         * Ported to Vanilla JS for Janes Birthday
+         */
+        (function () {
+            const container = document.getElementById('shader-container');
+            if (!container) return;
+
+            // Initialize camera
+            const camera = new THREE.Camera();
+            camera.position.z = 1;
+
+            // Initialize scene
+            const scene = new THREE.Scene();
+
+            // Create geometry
+            const geometry = new THREE.PlaneBufferGeometry(2, 2);
+
+            // Define uniforms
+            const uniforms = {
+                time: { type: "f", value: 1.0 },
+                resolution: { type: "v2", value: new THREE.Vector2() },
+            };
+
+            // Vertex shader
+            const vertexShader = `
+            void main() {
+                gl_Position = vec4( position, 1.0 );
+            }
+        `;
+
+            // Fragment shader
+            const fragmentShader = `
+            #define TWO_PI 6.2831853072
+            #define PI 3.14159265359
+
+            precision highp float;
+            uniform vec2 resolution;
+            uniform float time;
+                
+            float random (in float x) {
+                return fract(sin(x)*1e4);
+            }
+            float random (vec2 st) {
+                return fract(sin(dot(st.xy,
+                                     vec2(12.9898,78.233)))*
+                    43758.5453123);
+            }
+            
+            void main(void) {
+                vec2 uv = (gl_FragCoord.xy * 2.0 - resolution.xy) / min(resolution.x, resolution.y);
+                
+                vec2 fMosaicScal = vec2(4.0, 2.0);
+                vec2 vScreenSize = vec2(256,256);
+                uv.x = floor(uv.x * vScreenSize.x / fMosaicScal.x) / (vScreenSize.x / fMosaicScal.x);
+                uv.y = floor(uv.y * vScreenSize.y / fMosaicScal.y) / (vScreenSize.y / fMosaicScal.y);       
+                
+                float t = time*0.06+random(uv.x)*0.4;
+                float lineWidth = 0.0008;
+
+                vec3 color = vec3(0.0);
+                for(int j = 0; j < 3; j++){
+                    for(int i=0; i < 5; i++){
+                        color[j] += lineWidth*float(i*i) / abs(fract(t - 0.01*float(j)+float(i)*0.01)*1.0 - length(uv));        
+                    }
+                }
+
+                gl_FragColor = vec4(color[2],color[1],color[0],1.0);
+            }
+        `;
+
+            // Create material
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+            });
+
+            // Create mesh and add to scene
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // Initialize renderer
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Handle resize
+            const onWindowResize = () => {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                renderer.setSize(width, height);
+                uniforms.resolution.value.x = width;
+                uniforms.resolution.value.y = height;
+            };
+
+            onWindowResize();
+            window.addEventListener("resize", onWindowResize, false);
+
+            // Animation loop
+            const animate = () => {
+                requestAnimationFrame(animate);
+                uniforms.time.value += 0.05;
+                renderer.render(scene, camera);
+            };
+
+            animate();
+        })();
+    </script>
+    <script src="music-toggle.js"></script> <!-- Global Music Logic -->
+    <script src="cursor.js"></script> <!-- Custom Cursor Logic -->
+    <!-- Shooting Stars Script -->
+    <script src="shooting-stars.js"></script>
+    <script>
+        // Start the magic
+        document.addEventListener('DOMContentLoaded', () => {
+            initShootingStars('shooting-stars-bg');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Destinations</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Sorts+Mill+Goudy:ital@0;1&family=Great+Vibes&family=Courier+Prime:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cursor.css">
+    <link rel="stylesheet" href="avatars.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #020617;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            transition: background-color 2s ease;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-top: 60px;
+        }
+
+        /* PASSPORT GATEKEEPER STYLES (CENTERED BOOK FLIP) */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+
+        #passport-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            transition: opacity 0.8s ease;
+        }
+
+        /* The container that holds the book */
+        .passport-container {
+            position: relative;
+            width: 320px;
+            height: 460px;
+            cursor: pointer;
+            perspective: 1500px;
+            transition: transform 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Shift Right Animation: Moves container right by half its width (160px) to keep open book centered */
+        .passport-container.shift-right {
+            transform: translateX(160px);
+        }
+
+        /* General Page Style */
+        .passport-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* The Static "Back Page" (Right side when open) */
+        .bottom-page {
+            background: #fffbf0;
+            /* Paper color */
+            z-index: 1;
+            /* Behind the cover */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-left: 1px solid #ddd;
+        }
+
+        /* The Flipping Cover (Left side when open) */
+        .passport-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            /* Hinge on the left spine */
+            transition: transform 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 2;
+        }
+
+        /* Open State: Rotate -180deg (flip to left) */
+        .passport-cover.open {
+            transform: rotateY(-180deg);
+        }
+
+        .passport-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+        }
+
+        /* FRONT OF COVER (The Image) */
+        .front {
+            background-color: #0d1b2a;
+            z-index: 2;
+        }
+
+        .passport-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        /* BACK OF COVER (Inside Left Page) */
+        .back-face {
+            background-color: #0d1b2a;
+            /* Matching Navy Blue */
+            color: #d4af37;
+            /* Gold Texture */
+            transform: rotateY(180deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-shadow: inset -5px 0 20px rgba(0, 0, 0, 0.5);
+            /* Shadow near spine */
+        }
+
+        .gold-emboss {
+            border: 2px solid #d4af37;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* INSIDE CONTENT STYLES */
+        .passport-inside {
+            text-align: center;
+            width: 100%;
+        }
+
+        .stamp-header {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .security-msg {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 10px;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        #secretCode {
+            background: transparent;
+            border: 2px solid #888;
+            padding: 10px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            width: 80%;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            letter-spacing: 5px;
+            outline: none;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .unlock-btn {
+            background: #1e293b;
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .unlock-btn:hover {
+            background: #ec4899;
+            transform: scale(1.05);
+        }
+
+        .visas-stamp {
+            margin-top: 40px;
+            border: 3px double #d97706;
+            /* Amber ink */
+            color: #d97706;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            transform: rotate(-10deg);
+            opacity: 0.8;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-family: 'Courier Prime', monospace;
+            margin-top: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .hint-text {
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 30px;
+            font-style: italic;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* CINEMATIC DREAM STYLES */
+        .dest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+        }
+
+        .dest-card {
+            background: #000;
+            border-radius: 4px;
+            /* Sharp corners for film look */
+            overflow: hidden;
+            border: none;
+            position: relative;
+            height: 300px;
+            width: 100%;
+            cursor: pointer;
+            /* Clickable */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            transition: all 0.5s ease;
+        }
+
+        .dest-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 10%, transparent 60%);
+            z-index: 1;
+        }
+
+        /* Film Grain Overlay */
+        .film-grain {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            opacity: 0.6;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .dest-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* Slow cinematic zoom */
+            filter: brightness(0.8) contrast(1.1);
+        }
+
+        .dest-card:hover .dest-img {
+            transform: scale(1.05);
+            /* Very subtle zoom */
+            filter: brightness(1);
+        }
+
+        /* Text Overlay */
+        .cinematic-text {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            z-index: 3;
+            max-width: 80%;
+        }
+
+        .cinematic-city {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .cinematic-quote {
+            font-family: 'Sorts Mill Goudy', serif;
+            /* Cinematic Serif */
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.8s ease;
+        }
+
+        .dest-card:hover .cinematic-quote {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Exit Line */
+        .exit-line {
+            text-align: center;
+            margin-top: 80px;
+            margin-bottom: 40px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* Dream Mode Toggle */
+        .dream-toggle-container {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 100;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked+.slider {
+            background-color: #ec4899;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        /* TICKET STYLES (Original Gradient Style) */
+        .ticket-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            /* Slightly darker for drama */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .ticket-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .boarding-pass {
+            background: #fff;
+            width: 600px;
+            max-width: 90%;
+            border-radius: 20px;
+            /* Original Roundness */
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(50px) rotate(-3deg);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            color: #333;
+            font-family: 'Courier Prime', monospace;
+            position: relative;
+        }
+
+        /* Restored Header */
+        .ticket-header {
+            background: linear-gradient(to right, #ec4899, #8b5cf6);
+            /* Original Gradient */
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .airline-name {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        .ticket-modal.active .boarding-pass {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        .ticket-body {
+            padding: 30px;
+            display: flex;
+            gap: 20px;
+            position: relative;
+            background: #fff;
+        }
+
+        /* Tear-off Line */
+        .ticket-body::after {
+            content: '';
+            position: absolute;
+            right: 140px;
+            top: 10px;
+            bottom: 10px;
+            border-left: 2px dashed #ddd;
+            /* Original Dashed Line */
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .info-group label {
+            display: block;
+            font-size: 0.6rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .info-group span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #000;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .promise-note {
+            margin-top: 20px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: #ec4899;
+            text-align: center;
+            padding-right: 0;
+        }
+
+        /* Stub (Right Side) */
+        .ticket-stub {
+            width: 100px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: static;
+        }
+
+        .barcode {
+            height: 50px;
+            width: 100%;
+            background: repeating-linear-gradient(90deg, #000 0px, #000 2px, transparent 2px, transparent 4px);
+            margin-top: auto;
+            opacity: 1;
+        }
+
+        /* Immigration Stamp */
+        .immigration-stamp {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-15deg);
+            width: 130px;
+            height: 130px;
+            border: 4px double #2563eb;
+            /* Blue Ink */
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #2563eb;
+            font-family: 'Courier Prime', monospace;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 5;
+            mix-blend-mode: multiply;
+        }
+
+        .stamp-inner {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stamp-date {
+            font-size: 1rem;
+            margin: 5px 0;
+            border-top: 1px solid #2563eb;
+            border-bottom: 1px solid #2563eb;
+            padding: 2px 5px;
+        }
+
+        /* --- THE OPEN ROAD SECTION --- */
+        .section-header {
+            text-align: center;
+            margin: 80px 0 40px;
+            position: relative;
+        }
+
+        .section-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 1.2rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            display: inline-block;
+            padding: 0 20px;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Wide Card (Panoramic) */
+        .dest-card.wide {
+            height: 200px;
+            /* Shorter height for panoramic feel */
+            max-width: 800px;
+            margin: 0 auto;
+            /* Center it */
+        }
+
+        .dest-card.wide .cinematic-city {
+            font-size: 1.2rem;
+            /* Larger text for wide cards */
+            letter-spacing: 8px;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .dest-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cinematic-quote {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .ticket-body::after {
+                display: none;
+            }
+
+            .ticket-stub {
+                display: none;
+            }
+
+            .boarding-pass {
+                width: 90%;
+            }
+
+            .immigration-stamp {
+                width: 100px;
+                height: 100px;
+                bottom: 10px;
+                border-width: 3px;
+            }
+
+            .stamp-inner {
+                font-size: 0.5rem;
+            }
+
+            .stamp-date {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Dream Mode Active State */
+        body.dream-mode {
+            background-color: #000;
+        }
+
+        body.dream-mode .dest-card {
+            box-shadow: 0 0 60px rgba(236, 72, 153, 0.05);
+        }
+
+        body.dream-mode .heartbeat-bg {
+            opacity: 0.2;
+            animation-duration: 10s;
+        }
+
+        body.dream-mode .dest-img {
+            transition-duration: 4s;
+        }
+
+        body.dream-mode .cinematic-quote {
+            transition-duration: 1.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PASSPORT GATEKEEPER OVERLAY -->
+    <div id="passport-overlay">
+        <!-- Main Container -->
+        <div class="passport-container" onclick="flipPassport()">
+            <!-- STATIC BACK PAGE (Right side when open) -->
+            <div class="passport-page bottom-page">
+                <div class="passport-inside">
+                    <div class="stamp-header">OFFICIAL DOCUMENT</div>
+                    <div class="security-msg">ENTER SECRET CODE</div>
+                    <input type="password" id="secretCode" placeholder="•••••" onkeyup="checkSecret(event)">
+                    <button class="unlock-btn" onclick="unlockMemories()">UNLOCK</button>
+                    <div class="error-msg" id="errorMsg">ACCESS DENIED</div>
+                    <div class="visas-stamp">APPROVED<br>FOR LOVE </div>
+                </div>
+            </div>
+
+            <!-- FLIPPING FRONT COVER (Left side when open) -->
+            <div class="passport-cover" id="passportCover">
+                <!-- Front Face (Image) -->
+                <div class="passport-face front">
+                    <img src="pics/Indian_Passport_(e-Passport,_2024).svg.png" alt="Indian Passport"
+                        class="passport-cover-img">
+                </div>
+                <!-- Back Face (Inside Left - Navy Blue) -->
+                <div class="passport-face back-face">
+                    <!-- Plain Navy Blue -->
+                </div>
+            </div>
+        </div>
+        <div class="hint-text">Click to Open</div>
+    </div>
+
+    <!-- MAIN CONTENT (Initially Hidden) -->
+    <div id="main-content">
+        <div class="heartbeat-bg"></div>
+        <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+
+        <!-- Dream Mode Toggle -->
+        <div class="dream-toggle-container">
+            <span>Dream Mode ✨</span>
+            <label class="switch">
+                <input type="checkbox" id="dreamCheck" onchange="toggleDream()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="container">
+            <!-- Subtler Header -->
+            <h1
+                style="font-weight:300; letter-spacing:4px; opacity:0.9; text-transform:uppercase; font-size:1.5rem; margin-bottom:10px;">
+                Dreamscapes</h1>
+            <p class="subtitle"
+                style="font-style:italic; font-family:'Sorts Mill Goudy', serif; font-size:1.1rem; opacity:0.6; margin-bottom:60px;">
+                Click a memory to reveal your ticket.</p>
+
+            <div class="dest-grid">
+                <!-- Paris -->
+                <div class="dest-card" onclick="openTicket('paris')">
+                    <div class="film-grain"></div>
+                    <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80" class="dest-img"
+                        alt="Paris">
+                    <div class="cinematic-text">
+                        <div class="cinematic-city">PARIS</div>
+                        <div class="cinematic-quote">"A quiet evening walk. No rush. Just time."</div>
+                    </div>
+                </div>
+
+                <!-- Switzerland -->
+                <div class="dest-card" onclick="openTicket('swiss')">
+                    <div class="film-grain"></div>
+                    <img src="pics\swizz.jpeg" class="dest-img" alt="Swiss">
+                    <div class="cinematic-text">
+                        <div class="cinematic-city">SWITZERLAND</div>
+                        <div class="cinematic-quote">"Cold air. Warm conversations."</div>
+                    </div>
+                </div>
+
+                <!-- Maldives -->
+                <div class="dest-card" onclick="openTicket('maldives')">
+                    <div class="film-grain"></div>
+                    <img src="https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?w=800&q=80" class="dest-img"
+                        alt="Maldives">
+                    <div class="cinematic-text">
+                        <div class="cinematic-city">MALDIVES</div>
+                        <div class="cinematic-quote">"Nothing planned. Just days melting into each other."</div>
+                    </div>
+                </div>
+
+                <!-- Japan -->
+                <div class="dest-card" onclick="openTicket('japan')">
+                    <div class="film-grain"></div>
+                    <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=800&q=80" class="dest-img"
+                        alt="Japan">
+                    <div class="cinematic-text">
+                        <div class="cinematic-city">JAPAN</div>
+                        <div class="cinematic-quote">"Lost in streets. Found in moments."</div>
+                    </div>
+                </div>
+
+                <!-- Iceland -->
+                <div class="dest-card" onclick="openTicket('iceland')">
+                    <div class="film-grain"></div>
+                    <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80" class="dest-img"
+                        alt="Iceland">
+                    <div class="cinematic-text">
+                        <div class="cinematic-city">ICELAND</div>
+                        <div class="cinematic-quote">"Green skies. Frozen breath. Warm hearts."</div>
+                    </div>
+                </div>
+
+                <!-- New York -->
+                <div class="dest-card" onclick="openTicket('nyc')">
+                    <div class="film-grain"></div>
+                    <img src="https://picsum.photos/seed/portfolio/800/600" class="dest-img" alt="New York">
+                    <div class="cinematic-text">
+                        <div class="cinematic-city">NEW YORK</div>
+                        <div class="cinematic-quote">"Bright lights. Sleepless nights. Endless dreams."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE OPEN ROAD SECTION (REMOVED) -->
+
+            <div class="exit-line">
+                "No timelines. Just a thought."
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- TICKET MODAL (Moved Output for Fixed Positioning) -->
+    <div class="ticket-modal" id="ticketModal" onclick="closeTicket(event)">
+        <div class="boarding-pass" onclick="event.stopPropagation()">
+            <!-- HEADER -->
+            <div class="ticket-header">
+                <div class="airline-name"><i class="fas fa-plane"></i> Love Airways</div>
+                <div class="flight-class" style="background:rgba(255,255,255,0.2); border:none; color:white;">
+                    BUSINESS CLASS</div>
+            </div>
+
+            <!-- BODY -->
+            <div class="ticket-body">
+                <!-- IMMIGRATION STAMP -->
+                <div class="immigration-stamp">
+                    <div class="stamp-inner">DEPARTURE</div>
+                    <div class="stamp-inner" style="font-size:0.5rem; margin-top:2px;">KEMPEGOWDA INT'L</div>
+                    <div class="stamp-date">SOMEDAY SOON</div>
+                    <div class="stamp-inner">BENGALURU</div>
+                    <div class="stamp-inner" style="font-size:0.5rem;">IMMIGRATION</div>
+                </div>
+
+                <div class="flight-info" style="flex:1;">
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>Passengers</label>
+                            <span>Person A & Person B</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Date</label>
+                            <span>Someday Soon</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>From</label>
+                            <span>BENGALURU</span>
+                        </div>
+                        <div class="info-group" style="text-align:right;">
+                            <label>To</label>
+                            <span id="ticket-city">PARIS</span>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-group">
+                            <label>Seat</label>
+                            <span>1A & 1B</span>
+                        </div>
+                        <div class="info-group">
+                            <label>Flight</label>
+                            <span>LOVE-FOREVER</span>
+                        </div>
+                    </div>
+
+                    <div class="promise-note" id="ticket-promise">
+                        "Promise to share a moment of closeness under the Eiffel Tower."
+                    </div>
+                </div>
+
+                <!-- STUB (Right) -->
+                <div class="ticket-stub">
+                    <span style="font-size:2rem; font-weight:800; color:#ddd;">✈</span>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- PASSPORT LOGIC ---
+        let isFlipped = false;
+
+        function flipPassport() {
+            if (!isFlipped) {
+                // Animate both components
+                document.getElementById('passportCover').classList.add('open');
+                document.querySelector('.passport-container').classList.add('shift-right');
+
+                document.querySelector('.hint-text').style.opacity = '0';
+                isFlipped = true;
+                setTimeout(() => document.getElementById('secretCode').focus(), 800);
+            }
+        }
+
+        function checkSecret(e) {
+            if (e.key === 'Enter') unlockMemories();
+        }
+
+        function unlockMemories() {
+            const code = document.getElementById('secretCode').value.toLowerCase();
+
+            // Simple hardcoded check
+            // Simple hardcoded check
+            if (code === 'abcd' || code === '0000' || code === '1234') {
+                document.getElementById('passport-overlay').style.opacity = '0';
+                document.getElementById('passport-overlay').style.pointerEvents = 'none';
+
+                const main = document.getElementById('main-content');
+                main.style.display = 'block';
+
+                // Small delay to allow display:block to apply before opacity transition
+                setTimeout(() => {
+                    main.style.opacity = '1';
+                    main.style.transform = 'translateY(0)';
+                }, 50);
+            } else {
+                const err = document.getElementById('errorMsg');
+                err.style.opacity = '1';
+                setTimeout(() => err.style.opacity = '0', 2000);
+            }
+        }
+
+        // --- EXISTING LOGIC ---
+        const destinations = {
+            'paris': {
+                city: 'PARIS',
+                promise: "Promise to share a moment of closeness under the Eiffel Tower."
+            },
+            'swiss': {
+                city: 'ZURICH',
+                promise: "Promise to hold your hand in the snow forever."
+            },
+            'maldives': {
+                city: 'MALE',
+                promise: "Promise to watch the sunset from our water villa."
+            },
+            'japan': {
+                city: 'TOKYO',
+                promise: "Promise to walk with you under the cherry blossoms."
+            },
+            'iceland': {
+                city: 'REYKJAVIK',
+                promise: "Promise to hold you close under the dancing lights."
+            },
+            'nyc': {
+                city: 'NEW YORK',
+                promise: "Promise to conquer the world with you, one street at a time."
+            }
+        };
+
+        const modal = document.getElementById('ticketModal');
+        const cityEl = document.getElementById('ticket-city');
+        const promiseEl = document.getElementById('ticket-promise');
+        const airlineNameEl = document.querySelector('.airline-name');
+        const classEl = document.querySelector('.flight-class');
+
+        // Road Trip Elements
+        const roadOverlay = document.getElementById('road-trip-overlay');
+        const bmwCar = document.getElementById('bmwCar');
+        const fuelStation = document.getElementById('fuelStation');
+        const speedLines = document.getElementById('speedLines');
+        const arrivalMsg = document.getElementById('arrivalMsg');
+        const roadCity = document.getElementById('roadCity');
+        const roadPromise = document.getElementById('roadPromise');
+
+        function openTicket(key) {
+            console.log("Opening ticket for:", key); // Debugging
+            const data = destinations[key];
+
+            if (data) {
+                if (data.type === 'drive') {
+                    // --- ROAD TRIP ANIMATION ---
+                    startRoadTrip(data);
+                } else {
+                    // --- BOARDING PASS (FLIGHT) ---
+                    cityEl.innerText = data.city;
+                    promiseEl.innerText = `"${data.promise}"`;
+                    if (airlineNameEl) airlineNameEl.innerHTML = '<i class="fas fa-plane"></i> Love Airways';
+                    if (classEl) classEl.innerText = 'BUSINESS CLASS';
+                    modal.classList.add('active');
+                }
+            }
+        }
+
+        function startRoadTrip(data) {
+            roadOverlay.classList.add('active');
+
+            // Reset Animation State
+            bmwCar.className = 'bmw-car';
+            fuelStation.classList.remove('visible');
+            speedLines.classList.remove('active');
+            arrivalMsg.classList.remove('show');
+
+            // Set Text
+            roadCity.innerText = data.city;
+            roadPromise.innerText = `"${data.promise}"`;
+
+            // Sequence
+            // 1. Car Drives In
+            setTimeout(() => {
+                bmwCar.classList.add('drive-in');
+            }, 100);
+
+            // 2. Filling Petrol (Appear)
+            setTimeout(() => {
+                fuelStation.classList.add('visible');
+                bmwCar.classList.add('refuel'); // Idle vibrate
+            }, 1600); // After drive in finishes
+
+            // 3. Zoom Away (Zup Zup Zup!)
+            setTimeout(() => {
+                fuelStation.classList.remove('visible'); // Hide pump
+                bmwCar.classList.remove('refuel');
+                bmwCar.classList.add('zoom-out'); // Speed off
+                speedLines.classList.add('active'); // Speed lines on BG
+            }, 4000); // 2.5s of refueling
+
+            // 4. Show Arrival Message
+            setTimeout(() => {
+                speedLines.classList.remove('active');
+                arrivalMsg.classList.add('show');
+            }, 4800); // Just as car leaves screen
+        }
+
+        function closeRoadTrip() {
+            roadOverlay.classList.remove('active');
+        }
+
+        function closeTicket(e) {
+            modal.classList.remove('active');
+        }
+
+        function toggleDream() {
+            document.body.classList.toggle('dream-mode');
+        }
+    </script>
+    <script src="cursor.js"></script>
+    <script src="avatars.js"></script>
+
+</body>
+
+</html>

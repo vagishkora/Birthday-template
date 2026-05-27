@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scavenger Hunt - Janes Birthday</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="music-toggle.css"> <!-- Global Music Toggle -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hunt-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-bottom: 50px;
+        }
+
+        .level {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .level.locked {
+            filter: blur(5px);
+            pointer-events: none;
+            opacity: 0.6;
+            user-select: none;
+        }
+
+        /* The first one shouldn't be blurred if active, but we handle logic via JS classes */
+
+        .riddle-box {
+            margin-bottom: 20px;
+        }
+
+        .riddle-input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 70%;
+            margin-right: 10px;
+        }
+
+        .msg-box {
+            display: none;
+            /* Hidden strictly via CSS until unlocked */
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--accent-color);
+            border-radius: 10px;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .level.unlocked .msg-box {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            background: #ccc;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .level.unlocked .badge {
+            background: var(--primary-color);
+        }
+
+        .final-reward {
+            text-align: center;
+            display: none;
+            margin-top: 50px;
+        }
+
+        .next-btn-container {
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+
+    <div class="container">
+        <h1>Birthday Scavenger Hunt</h1>
+        <p>Unlock the memories to reveal the full surprise!</p>
+
+        <div class="hunt-container">
+            <!-- Level 1 -->
+            <div class="level" id="level-1">
+                <div class="level-header">
+                    <h2>Level 1</h2>
+                    <span class="badge" id="badge-1">LOCKED</span>
+                </div>
+                <div class="riddle-box">
+                    <p><strong>Riddle:</strong> I have cities, but no houses. I have mountains, but no trees. I have
+                        water, but no fish. What am I? (One word)</p>
+                    <input type="text" class="riddle-input" id="input-1" placeholder="Your Answer">
+                    <button class="btn" style="margin: 0; padding: 10px 20px;" onclick="checkAnswer(1)">Unlock</button>
+                    <p id="error-1" style="color: red; display: none;">Try again!</p>
+                </div>
+                <div class="msg-box">
+                    <h3>Correct!</h3>
+                    <p>It's a Map! Like the map of our journey together.</p>
+                    <img src="placeholder.jpg" alt="Reward 1"
+                        style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin-top: 10px;">
+                </div>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="level locked" id="level-2">
+                <div class="level-header">
+                    <h2>Level 2</h2>
+                    <span class="badge" id="badge-2">LOCKED</span>
+                </div>
+                <div class="riddle-box">
+                    <p><strong>Riddle:</strong> What is the name of the place where we defined 'Us'? (Enter:
+                        "PlaceName")</p>
+                    <input type="text" class="riddle-input" id="input-2" placeholder="Your Answer">
+                    <button class="btn" style="margin: 0; padding: 10px 20px;" onclick="checkAnswer(2)">Unlock</button>
+                    <p id="error-2" style="color: red; display: none;">Try again!</p>
+                </div>
+                <div class="msg-box">
+                    <h3>You got it!</h3>
+                    <p>That place will always be special.</p>
+                </div>
+            </div>
+
+            <!-- Level 3 -->
+            <div class="level locked" id="level-3">
+                <div class="level-header">
+                    <h2>Level 3</h2>
+                    <span class="badge" id="badge-3">LOCKED</span>
+                </div>
+                <div class="riddle-box">
+                    <p><strong>Riddle:</strong> What is my favorite color on you? (One word)</p>
+                    <input type="text" class="riddle-input" id="input-3" placeholder="Your Answer">
+                    <button class="btn" style="margin: 0; padding: 10px 20px;" onclick="checkAnswer(3)">Unlock</button>
+                    <p id="error-3" style="color: red; display: none;">Try again!</p>
+                </div>
+                <div class="msg-box">
+                    <h3>Yes!</h3>
+                    <p>You look stunning in it. You have completed the hunt!</p>
+                </div>
+            </div>
+
+            <div class="next-btn-container" id="final-btn">
+                <a href="letter.html" class="btn">Read My Letter <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // ANSWERS - CUSTOMIZE HERE
+        const answers = {
+            1: ["map"],
+            2: ["paris", "home", "park"], // Feel free to add multiple valid variations
+            3: ["red", "blue", "black"]
+        };
+
+        function checkAnswer(level) {
+            const input = document.getElementById(`input-${level}`).value.toLowerCase().trim();
+            const validAnswers = answers[level];
+            const errorMsg = document.getElementById(`error-${level}`);
+
+            if (validAnswers.includes(input)) {
+                // Success
+                errorMsg.style.display = 'none';
+
+                // Mark current level complete
+                const currentLevelEl = document.getElementById(`level-${level}`);
+                currentLevelEl.classList.add('unlocked');
+                document.getElementById(`badge-${level}`).textContent = "UNLOCKED";
+                document.getElementById(`badge-${level}`).style.background = "#4ecdc4"; // Success color
+
+                // Remove input area to look cleaner
+                currentLevelEl.querySelector('.riddle-box').style.display = 'none';
+
+                // Unlock next level logic
+                if (level < 3) {
+                    const nextLevel = document.getElementById(`level-${level + 1}`);
+                    setTimeout(() => {
+                        nextLevel.classList.remove('locked');
+                    }, 1000);
+                } else {
+                    // Final level
+                    const finalBtn = document.getElementById('final-btn');
+                    finalBtn.style.opacity = '1';
+                    finalBtn.style.pointerEvents = 'auto';
+                }
+
+            } else {
+                // Failure
+                errorMsg.style.display = 'block';
+            }
+        }
+    </script>
+    <script src="music-toggle.js"></script> <!-- Global Music Logic -->
+</body>
+
+</html>

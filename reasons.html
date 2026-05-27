@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Reasons I Love You</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏺</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="music-toggle.css">
+    <script src="auth.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1a1025 100%);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            /* Scene is fixed */
+            perspective: 1000px;
+        }
+
+        /* ATMOSPHERE */
+        .heartbeat-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .header {
+            position: absolute;
+            top: 10px;
+            /* Moved up */
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            margin: 0;
+            background: linear-gradient(to right, #fbcfe8, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: -10px;
+        }
+
+        .counter-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        /* JAR SCENE */
+        .scene {
+            position: absolute;
+            top: 60%;
+            /* Pushed down to avoid overlap */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .jar-container {
+            position: relative;
+            width: 200px;
+            height: 280px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .jar-container:hover {
+            transform: scale(1.02);
+        }
+
+        .jar-body {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 40px 40px 60px 60px;
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.05),
+                inset 10px 0 20px rgba(255, 255, 255, 0.1);
+            /* Glass reflection */
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+            z-index: 2;
+        }
+
+        .jar-lid {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 40px;
+            background: linear-gradient(90deg, #d4a76a, #fcd34d);
+            /* Gold/Cork */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+            /* Behind body's top overlap? No, above. */
+            z-index: 3;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+        }
+
+        /* SHAKE ANIMATION */
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+        }
+
+        @keyframes shake {
+
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0) rotate(-1deg);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0) rotate(2deg);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0) rotate(-4deg);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0) rotate(4deg);
+            }
+        }
+
+        /* NOTES INSIDE */
+        .note-pile {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            top: 50px;
+            z-index: 1;
+        }
+
+        .folded-heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ec4899;
+            transform: rotate(45deg);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .folded-heart::before,
+        .folded-heart::after {
+            content: "";
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ec4899;
+            position: absolute;
+        }
+
+        .folded-heart::before {
+            left: -15px;
+        }
+
+        .folded-heart::after {
+            top: -15px;
+        }
+
+        /* POPPED NOTE */
+        .flying-note {
+            position: fixed;
+            z-index: 100;
+            transition: all 1s ease-in-out;
+            pointer-events: none;
+        }
+
+        /* REASON CARD OVERLAY */
+        .card-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .card-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .reason-card {
+            width: 90%;
+            max-width: 450px;
+            /* Slightly wider */
+            background: rgba(15, 23, 42, 0.85);
+            /* Darker, more opaque background */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            /* Stronger shadow */
+            transform: scale(0.5) rotate(-10deg);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card-overlay.active .reason-card {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .reason-num {
+            font-size: 1rem;
+            color: #ec4899;
+            /* Pink pop */
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: block;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .reason-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            /* Clean, readable font */
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .collect-btn {
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            border: none;
+            padding: 12px 30px;
+            color: white;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .collect-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* AUTO PLAY BUTTON */
+        .autoplay-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .autoplay-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .autoplay-btn.active {
+            background: #ec4899;
+            border-color: #ec4899;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+        }
+
+        /* COLLECTION GRID (For viewing all collected) */
+        .collection-btn-corner {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .collection-btn-corner:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Floating Particles in background */
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            from {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="heartbeat-bg"></div>
+    <!-- Particles injected by JS -->
+
+    <!-- Nav -->
+    <a href="home.html" class="glass-home-btn"><i class="fas fa-home"></i></a>
+
+    <div class="header">
+        <h1 class="title">100 Reasons</h1>
+        <p class="subtitle">Shake the jar to find a reason...</p>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <span class="counter-badge" id="counter">Collected: 0 / 100</span>
+            <button class="autoplay-btn" id="autoplay-btn" onclick="toggleAutoPlay()">
+                <i class="fas fa-play"></i>(Auto-Play)
+            </button>
+        </div>
+    </div>
+
+    <!-- JAR SCENE -->
+    <div class="scene">
+        <div class="jar-container" id="jar" onclick="shakeJar()">
+            <div class="jar-lid"></div>
+            <div class="jar-body">
+                <div class="note-pile" id="note-pile">
+                    <!-- JS fills this with pseudo hearts -->
+                </div>
+            </div>
+            <!-- Click Hint -->
+            <div
+                style="position: absolute; bottom: -40px; width: 100%; text-align: center; color: rgba(255,255,255,0.5); font-size: 0.8rem;">
+                (Tap Me)
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD MODAL -->
+    <div class="card-overlay" id="card-overlay">
+        <div class="reason-card">
+            <span class="reason-num" id="card-num">Reason #1</span>
+            <p class="reason-text" id="card-text">Because your smile lights up my darkest days.</p>
+            <button class="collect-btn" onclick="closeCard()">Keep in Heart ❤️</button>
+        </div>
+    </div>
+
+    <a href="#" class="collection-btn-corner" onclick="resetCollection()">Reset Collection (Dev)</a>
+
+    <script src="music-toggle.js"></script>
+    <script>
+        // 100 REASONS DATA
+        const reasons = Array.from({length: 100}, (_, i) => "Generic compliment #" + (i + 1) + ". You are amazing.");
+
+        // Enhance reasons list later or dynamically
+
+        let collected = JSON.parse(localStorage.getItem('collectedReasons')) || [];
+        let isAutoPlaying = false;
+        let autoPlayTimer = null;
+
+        updateCounter();
+        fillJar();
+
+        function fillJar() {
+            const pile = document.getElementById('note-pile');
+            pile.innerHTML = '';
+            // Visual fill only - add random hearts
+            const count = Math.min(50, 100 - collected.length); // Fewer hearts as we collect
+
+            for (let i = 0; i < count; i++) {
+                let h = document.createElement('div');
+                h.className = 'folded-heart';
+                // Random position in jar
+                h.style.left = Math.random() * 80 + '%';
+                h.style.top = Math.random() * 80 + '%';
+                h.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.5 + Math.random() * 0.5})`;
+                // Random pastel colors
+                const colors = ['#ec4899', '#f472b6', '#fb7185', '#e879f9', '#c084fc'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                h.style.backgroundColor = color;
+                // Pseudo elements color trick requires CSS var or specific styling
+                // For simplicity, let's just make squares for folded notes if hearts are tricky dynamically
+                // Or just use SVG icons?
+                h.style.background = 'none';
+                h.innerHTML = `<i class="fas fa-heart" style="color: ${color}; font-size: ${1 + Math.random()}rem; text-shadow: 2px 2px 5px rgba(0,0,0,0.2);"></i>`;
+
+                pile.appendChild(h);
+            }
+        }
+
+        function shakeJar() {
+            const jar = document.getElementById('jar');
+            if (jar.classList.contains('shake')) return;
+
+            // 1. Shake
+            jar.classList.add('shake');
+
+            // 2. Play sound? (Optional)
+
+            // 3. Pop Note after delay
+            setTimeout(() => {
+                jar.classList.remove('shake');
+                popNote();
+            }, 500);
+        }
+
+        function popNote() {
+            // Pick random uncollected
+            const availableIndices = reasons.map((_, i) => i).filter(i => !collected.includes(i));
+
+            if (availableIndices.length === 0) {
+                alert("You've collected all 100 reasons! ❤️");
+                return;
+            }
+
+            const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+
+            // Animate flying note
+            const flyer = document.createElement('div');
+            flyer.innerHTML = '<i class="fas fa-heart" style="color: #ec4899; font-size: 2rem;"></i>';
+            flyer.style.position = 'fixed';
+            flyer.style.left = '50%';
+            flyer.style.top = '50%';
+            flyer.style.transform = 'translate(-50%, -50%) scale(0)';
+            flyer.style.zIndex = '200';
+            document.body.appendChild(flyer);
+
+            // Animation sequence
+            // Start from jar center
+            // Fly up and scale
+            requestAnimationFrame(() => {
+                flyer.style.transform = 'translate(-50%, -200%) scale(1.5)';
+
+                setTimeout(() => {
+                    // Fade out flyer and open card
+                    flyer.style.opacity = '0';
+                    showCard(randomIndex);
+                    setTimeout(() => flyer.remove(), 500);
+                }, 400);
+            });
+        }
+
+        function showCard(index) {
+            const overlay = document.getElementById('card-overlay');
+            const txt = document.getElementById('card-text');
+            const num = document.getElementById('card-num');
+
+            txt.textContent = reasons[index];
+            num.textContent = `Reason #${index + 1}`;
+
+            // Mark as collected immediately? Or on button press?
+            // Doing it here prevents duplicates effectively
+            if (!collected.includes(index)) {
+                collected.push(index);
+                localStorage.setItem('collectedReasons', JSON.stringify(collected));
+                updateCounter();
+                fillJar(); // Update visuals
+            }
+
+            overlay.classList.add('active');
+
+            // AUTO PLAY: Read time
+            if (isAutoPlaying) {
+                // Calculate read time based on text length? Or static 4s?
+                // Let's do 4 seconds + 1s per 10 words
+                const wordCount = reasons[index].split(' ').length;
+                const readTime = 3000 + (wordCount * 300);
+
+                autoPlayTimer = setTimeout(() => {
+                    if (isAutoPlaying) playNext();
+                }, readTime);
+            }
+        }
+
+        function closeCard() {
+            document.getElementById('card-overlay').classList.remove('active');
+        }
+
+        function updateCounter() {
+            document.getElementById('counter').textContent = `Collected: ${collected.length} / 100`;
+        }
+
+        function resetCollection() {
+            localStorage.removeItem('collectedReasons');
+            collected = [];
+            updateCounter();
+            fillJar();
+            alert('Collection reset!');
+        }
+
+        // AUTO PLAY LOGIC
+        function toggleAutoPlay() {
+            const btn = document.getElementById('autoplay-btn');
+            const icon = btn.querySelector('i');
+
+            isAutoPlaying = !isAutoPlaying;
+
+            if (isAutoPlaying) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-pause"></i> Pause Love';
+                playNext();
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-play"></i> Pour Love (Auto-Play)';
+                clearTimeout(autoPlayTimer);
+            }
+        }
+
+        function playNext() {
+            if (!isAutoPlaying) return;
+
+            // 1. Close any open card
+            const overlay = document.getElementById('card-overlay');
+            if (overlay.classList.contains('active')) {
+                closeCard();
+                // Wait for close animation then shake
+                autoPlayTimer = setTimeout(shakeJar, 800);
+            } else {
+                // Just shake
+                shakeJar();
+            }
+        }
+
+        // Hook into showCard to schedule next Close/Next loop
+        // We modify showCard to NOT auto-close, but wait for user to read?
+        // Actually for AutoPlay, we need to Auto-Close too.
+
+        // Let's modify logic slightly:
+        // When AutoPlay is ON, showCard should set a timeout to trigger next loop
+
+        // REPLACING showCard logic hook inside showCard function above via simple override logic here
+        // No, let's just edit the original function or add logic to it.
+        // It's cleaner to edit the original function, but here I can just create a wrapper logic 
+        // by listening for mutations or just adding code to existing flow via tool.
+
+
+        // Background particles
+        const bg = document.querySelector('.heartbeat-bg');
+        for (let i = 0; i < 20; i++) {
+            let p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.width = Math.random() * 4 + 2 + 'px';
+            p.style.height = p.style.width;
+            p.style.animationDuration = Math.random() * 10 + 10 + 's';
+            p.style.animationDelay = Math.random() * 5 + 's';
+            p.style.opacity = Math.random() * 0.5;
+            document.body.appendChild(p);
+        }
+
+    </script>
+</body>
+
+</html>

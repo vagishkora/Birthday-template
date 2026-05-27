@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020617;
+            /* Deepest match to site */
+            color: #e2e8f0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 80%;
+            opacity: 0;
+            animation: fade-in 2.5s ease-out forwards;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .highlight {
+            color: #fbcfe8;
+            /* Soft pink */
+            font-weight: 400;
+        }
+
+        .signature {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <p>Hey Jane <span class="highlight">🤍</span></p>
+
+        <p>
+            Just a small birthday note —<br>
+            not loud, not dramatic.
+        </p>
+
+        <p>
+            I hope this year brings you<br>
+            calm days, genuine smiles,<br>
+            and moments where you feel<br>
+            proud of how far you’ve come.
+        </p>
+
+        <p>
+            You deserve good things.<br>
+            <span class="highlight">Always have.</span>
+        </p>
+
+        <div class="signature">Happy Birthday Jane Once Again❤️</div>
+    </div>
+
+</body>
+
+</html>
