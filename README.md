@@ -1,5 +1,7 @@
 # 🌌 Interactive Celebration Template
 
+[**Live Preview**](https://vagishkora.github.io/Birthday-template/)
+
 A high-performance, interactive, and beautifully designed web application template created for special occasions and celebrations. Built with Vanilla JavaScript, HTML5 Canvas, and advanced CSS3, this project delivers a highly immersive user experience without relying on heavy frontend frameworks.
 
 ## ✨ Features
@@ -27,5 +29,3 @@ A high-performance, interactive, and beautifully designed web application templa
 4. Serve locally using any basic HTTP server (e.g., VS Code Live Server or Python's `http.server`).
 
 ---
-
-
