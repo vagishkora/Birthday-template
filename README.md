@@ -28,11 +28,4 @@ A high-performance, interactive, and beautifully designed web application templa
 
 ---
 
-## 💼 Resume Bullet Points
 
-*If you are adding this project to your software engineering resume, consider using the following bullet points to highlight your technical accomplishments:*
-
-* **Developed a high-performance interactive web application** using Vanilla JavaScript and HTML5 Canvas, achieving smooth 60fps rendering for complex particle systems (fireworks, shooting stars) through optimized `requestAnimationFrame` lifecycle management.
-* **Engineered a custom DOM-based interactive cursor and 3D holographic tilt-cards** utilizing advanced CSS3 math functions and JavaScript event throttling to prevent layout thrashing and minimize CPU overhead.
-* **Built an interactive gamified user experience** featuring a constellation lock-screen puzzle, an integrated Web Audio API visualizer, and a responsive glassmorphism UI architecture without reliance on external UI frameworks.
-* **Optimized rendering pipelines** by eliminating expensive CSS `backdrop-filter` overlaps and managing object pooling for particle animations, significantly improving time-to-interactive and GPU performance on lower-end devices.
